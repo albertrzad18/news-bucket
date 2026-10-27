@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "sources": [
+    { "id": "claude-code-releases", "name": "Claude Code releases", "category": "claude", "type": "feed", "url": "https://github.com/anthropics/claude-code/releases.atom", "limit": 10, "notify": true },
+    { "id": "anthropic-news", "name": "Anthropic News (community feed)", "category": "claude", "type": "feed", "url": "https://raw.githubusercontent.com/Olshansk/rss-feeds/main/feeds/feed_anthropic_news.xml", "limit": 15, "notify": true },
+    { "id": "anthropic-engineering", "name": "Anthropic Engineering (community feed)", "category": "claude", "type": "feed", "url": "https://raw.githubusercontent.com/Olshansk/rss-feeds/main/feeds/feed_anthropic_engineering.xml", "limit": 15 },
+    { "id": "hn-claude", "name": "Hacker News: Claude", "category": "claude", "type": "hn_algolia", "url": "https://hn.algolia.com/api/v1/search_by_date?query=claude&tags=story&numericFilters=points%3E50", "limit": 20 },
+
+    { "id": "openai-news", "name": "OpenAI News", "category": "ai", "type": "feed", "url": "https://openai.com/news/rss.xml", "limit": 15 },
+    { "id": "google-ai", "name": "Google AI Blog", "category": "ai", "type": "feed", "url": "https://blog.google/technology/ai/rss/", "limit": 15 },
+    { "id": "huggingface", "name": "Hugging Face Blog", "category": "ai", "type": "feed", "url": "https://huggingface.co/blog/feed.xml", "limit": 15 },
+    { "id": "simon-willison", "name": "Simon Willison", "category": "ai", "type": "feed", "url": "https://simonwillison.net/atom/everything/", "limit": 15 },
+    { "id": "arxiv-ai", "name": "arXiv cs.AI / cs.CL", "category": "ai", "type": "feed", "url": "https://export.arxiv.org/api/query?search_query=cat:cs.AI+OR+cat:cs.CL&sortBy=submittedDate&sortOrder=descending&max_results=10", "limit": 10 },
+    { "id": "devto-ai", "name": "DEV: #ai (top week)", "category": "ai", "type": "devto", "url": "https://dev.to/api/articles?tag=ai&top=7&per_page=15", "limit": 15 },
+
+    { "id": "hn-front", "name": "Hacker News front page", "category": "programming", "type": "hn_algolia", "url": "https://hn.algolia.com/api/v1/search?tags=front_page&numericFilters=points%3E100", "limit": 20 },
+    { "id": "lobsters", "name": "Lobsters", "category": "programming", "type": "feed", "url": "https://lobste.rs/rss", "limit": 15 },
+    { "id": "devto-top", "name": "DEV (top week)", "category": "programming", "type": "devto", "url": "https://dev.to/api/articles?top=7&per_page=15", "limit": 15 },
+    { "id": "github-blog", "name": "GitHub Blog", "category": "programming", "type": "feed", "url": "https://github.blog/feed/", "limit": 15 },
+
+    { "id": "bleepingcomputer", "name": "BleepingComputer", "category": "security", "type": "feed", "url": "https://www.bleepingcomputer.com/feed/", "limit": 15 },
+    { "id": "thehackernews", "name": "The Hacker News", "category": "security", "type": "feed", "url": "https://feeds.feedburner.com/TheHackersNews", "limit": 15 },
+    { "id": "krebs", "name": "Krebs on Security", "category": "security", "type": "feed", "url": "https://krebsonsecurity.com/feed/", "limit": 10 },
+    { "id": "schneier", "name": "Schneier on Security", "category": "security", "type": "feed", "url": "https://www.schneier.com/feed/atom/", "limit": 10 },
+    { "id": "sekurak", "name": "Sekurak (PL)", "category": "security", "type": "feed", "url": "https://sekurak.pl/feed/", "limit": 15 },
+    { "id": "niebezpiecznik", "name": "Niebezpiecznik (PL)", "category": "security", "type": "feed", "url": "https://niebezpiecznik.pl/feed/", "limit": 15 },
+
+    { "id": "cnbc", "name": "CNBC Top News", "category": "markets", "type": "feed", "url": "https://www.cnbc.com/id/100003114/device/rss/rss.html", "limit": 15 },
+    { "id": "marketwatch", "name": "MarketWatch Top Stories", "category": "markets", "type": "feed", "url": "https://feeds.content.dowjones.io/public/rss/mw_topstories", "limit": 15 },
+    { "id": "etfcom", "name": "ETF.com", "category": "markets", "type": "feed", "url": "https://www.etf.com/rss.xml", "limit": 15 },
+
+    { "id": "coindesk", "name": "CoinDesk", "category": "crypto", "type": "feed", "url": "https://www.coindesk.com/arc/outboundfeeds/rss/", "limit": 15 },
+    { "id": "cointelegraph", "name": "Cointelegraph", "category": "crypto", "type": "feed", "url": "https://cointelegraph.com/rss", "limit": 15 },
+    { "id": "decrypt", "name": "Decrypt", "category": "crypto", "type": "feed", "url": "https://decrypt.co/feed", "limit": 15 }
+  ]
+}
