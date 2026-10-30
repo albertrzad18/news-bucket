@@ -1,0 +1,5 @@
+# Keep LF in the repo so `dart format` in CI (Linux) and on Windows agree.
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.jar binary

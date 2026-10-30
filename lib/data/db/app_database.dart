@@ -47,7 +47,14 @@ class SourceStates extends Table {
 @DriftDatabase(tables: [Articles, SourceStates])
 class AppDatabase extends _$AppDatabase {
   AppDatabase([QueryExecutor? executor])
-    : super(executor ?? driftDatabase(name: 'news_bucket'));
+    : super(
+        executor ??
+            driftDatabase(
+              name: 'news_bucket',
+              // The background news check runs in another isolate.
+              native: const DriftNativeOptions(shareAcrossIsolates: true),
+            ),
+      );
 
   @override
   int get schemaVersion => 1;

@@ -9,17 +9,17 @@ final disabledSourcesProvider =
     );
 
 class DisabledSourcesNotifier extends Notifier<Set<String>> {
-  static const _key = 'disabled_sources';
+  static const key = 'disabled_sources';
 
   @override
   Set<String> build() =>
-      (ref.read(sharedPreferencesProvider).getStringList(_key) ?? const [])
+      (ref.read(sharedPreferencesProvider).getStringList(key) ?? const [])
           .toSet();
 
   void setEnabled(String sourceId, {required bool enabled}) {
     final next = {...state};
     enabled ? next.remove(sourceId) : next.add(sourceId);
     state = next;
-    ref.read(sharedPreferencesProvider).setStringList(_key, next.toList());
+    ref.read(sharedPreferencesProvider).setStringList(key, next.toList());
   }
 }

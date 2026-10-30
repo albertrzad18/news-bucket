@@ -180,6 +180,9 @@ class NewsRepository {
   Stream<List<SourceStateRow>> watchSourceStates() =>
       _db.select(_db.sourceStates).watch();
 
+  Future<List<SourceStateRow>> getSourceStates() =>
+      _db.select(_db.sourceStates).get();
+
   Future<DateTime?> lastRefreshAt() async {
     final max = _db.sourceStates.lastAttemptAt.max();
     final row = await (_db.selectOnly(
