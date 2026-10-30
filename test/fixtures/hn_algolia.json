@@ -1,0 +1,5 @@
+{"hits":[
+ {"objectID":"111","title":"Show HN: A thing","url":"https://example.com/thing?utm_medium=x","points":250,"num_comments":42,"author":"pg","created_at_i":1793000000,"created_at":"2026-10-26T00:00:00Z","story_text":null},
+ {"objectID":"222","title":"Ask HN: Anything?","url":null,"points":120,"num_comments":10,"author":"sam","created_at_i":1793100000,"story_text":"<p>What do you think?</p>"},
+ {"objectID":"333","title":null,"url":"https://example.com/no-title"}
+]}

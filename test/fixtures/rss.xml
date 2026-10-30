@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:media="http://search.yahoo.com/mrss/" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Example</title>
+    <atom:link href="https://example.com/feed" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>Claude &amp; friends: a &lt;b&gt;test&lt;/b&gt;</title>
+      <link>https://Example.com/post-1/?utm_source=rss&amp;id=7</link>
+      <pubDate>Tue, 27 Oct 2026 12:00:00 +0200</pubDate>
+      <dc:creator>Jane Doe</dc:creator>
+      <description><![CDATA[<p>Hello <b>world</b>, this is   a snippet.</p><script>alert(1)</script>]]></description>
+      <media:thumbnail url="https://example.com/img.png"/>
+      <comments>https://example.com/post-1#comments</comments>
+    </item>
+    <item>
+      <title>No link here</title>
+      <description>skipped</description>
+    </item>
+    <item>
+      <title>Guid only</title>
+      <guid isPermaLink="true">https://example.com/guid-only</guid>
+    </item>
+    <item>
+      <title>Not permalink guid</title>
+      <guid isPermaLink="false">abc-123</guid>
+    </item>
+  </channel>
+</rss>

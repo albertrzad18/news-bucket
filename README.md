@@ -38,12 +38,13 @@ flutter analyze
 flutter test
 flutter run            # on an emulator or a USB-connected phone
 flutter build apk      # build an installable APK
+dart run tool/check_sources.dart   # fetch every source live and print item counts
 ```
 
 ## Roadmap
 
 - [x] Project skeleton: navigation, light/dark theme, source list, CI
-- [ ] Data layer: feed parsers (RSS/Atom/JSON), local cache (drift), refresh
+- [x] Data layer: feed parsers (RSS/Atom/RDF/JSON), local cache (drift), refresh
 - [ ] Feed UI: category and source filters, read/unread, pull-to-refresh, offline mode
 - [ ] Saved articles
 - [ ] Background check with local notifications (e.g. new Claude Code releases)
