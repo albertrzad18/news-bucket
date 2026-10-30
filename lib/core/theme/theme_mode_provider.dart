@@ -1,15 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-/// Selected theme mode. Kept in memory for now; persisted with
-/// shared_preferences in a later phase.
+import '../settings/preferences.dart';
+
+/// Selected theme mode, persisted in shared_preferences.
 final themeModeProvider = NotifierProvider<ThemeModeNotifier, ThemeMode>(
   ThemeModeNotifier.new,
 );
 
 class ThemeModeNotifier extends Notifier<ThemeMode> {
-  @override
-  ThemeMode build() => ThemeMode.system;
+  static const _key = 'theme_mode';
 
-  void set(ThemeMode mode) => state = mode;
+  @override
+  ThemeMode build() {
+    final name = ref.read(sharedPreferencesProvider).getString(_key);
+    return ThemeMode.values.asNameMap()[name] ?? ThemeMode.system;
+  }
+
+  void set(ThemeMode mode) {
+    state = mode;
+    ref.read(sharedPreferencesProvider).setString(_key, mode.name);
+  }
 }

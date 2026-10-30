@@ -45,8 +45,8 @@ dart run tool/check_sources.dart   # fetch every source live and print item coun
 
 - [x] Project skeleton: navigation, light/dark theme, source list, CI
 - [x] Data layer: feed parsers (RSS/Atom/RDF/JSON), local cache (drift), refresh
-- [ ] Feed UI: category and source filters, read/unread, pull-to-refresh, offline mode
-- [ ] Saved articles
+- [x] Feed UI: category and source filters, read/unread, pull-to-refresh, offline cache
+- [x] Saved articles, per-source on/off switches, persisted theme
 - [ ] Background check with local notifications (e.g. new Claude Code releases)
 - [ ] Signed release APKs published to GitHub Releases
 
