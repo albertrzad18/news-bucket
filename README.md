@@ -11,8 +11,8 @@ headlines about **AI** (with a focus on Claude / Anthropic), **programming**, **
 - Pull to refresh; refreshes on its own when the data is older than 15 minutes
 - Works offline from a local cache (articles are kept for 30 days, saved ones forever)
 - Save articles for later, share them, read/unread state
-- Optional notifications about new articles (by default: Claude Code releases and Anthropic
-  news), checked in the background about once an hour
+- Optional notifications about new articles from the sources you mark with a bell (off by
+  default), checked in the background about once an hour
 - Light, dark or system theme; every source can be switched off in Settings
 
 ## How it works
