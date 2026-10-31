@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -11,6 +13,7 @@ import 'features/notifications/notification_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  _registerFontLicenses();
   final prefs = await SharedPreferences.getInstance();
   if (supportsBackgroundChecks) await _initNotifications(prefs);
   runApp(
@@ -19,6 +22,19 @@ Future<void> main() async {
       child: const NewsBucketApp(),
     ),
   );
+}
+
+/// The bundled fonts are OFL-licensed; list them on the licenses page.
+void _registerFontLicenses() {
+  LicenseRegistry.addLicense(() async* {
+    for (final (package, file) in const [
+      ('Literata', 'Literata-OFL.txt'),
+      ('Public Sans', 'PublicSans-OFL.txt'),
+    ]) {
+      final text = await rootBundle.loadString('assets/fonts/$file');
+      yield LicenseEntryWithLineBreaks([package], text);
+    }
+  });
 }
 
 Future<void> _initNotifications(SharedPreferences prefs) async {
