@@ -108,7 +108,7 @@ void main() {
     await pumpApp(
       tester,
       articles: {
-        NewsCategory.claude: ['Claude story'],
+        NewsCategory.ai: ['Claude story'],
         NewsCategory.crypto: ['Crypto story'],
       },
     );
@@ -147,7 +147,7 @@ void main() {
     final container = await pumpApp(
       tester,
       articles: {
-        NewsCategory.claude: ['Claude story'],
+        NewsCategory.ai: ['Claude story'],
         NewsCategory.programming: ['Rust story'],
       },
     );
@@ -170,14 +170,14 @@ void main() {
     await pumpApp(
       tester,
       articles: {
-        NewsCategory.claude: ['Claude story'],
+        NewsCategory.ai: ['Claude story'],
       },
       prefs: {
         'disabled_sources': ['claude-code-releases'],
       },
     );
 
-    // Three Claude sources remain enabled, one is switched off.
+    // The other AI sources remain enabled, one is switched off.
     expect(find.text('Claude story'), findsWidgets);
     await tester.tap(find.text('Settings').last);
     await tester.pumpAndSettle();

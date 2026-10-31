@@ -1,10 +1,10 @@
 {
   "version": 1,
   "sources": [
-    { "id": "claude-code-releases", "name": "Claude Code releases", "category": "claude", "type": "feed", "url": "https://github.com/anthropics/claude-code/releases.atom", "limit": 10, "notify": true },
-    { "id": "anthropic-news", "name": "Anthropic News (community feed)", "category": "claude", "type": "feed", "url": "https://raw.githubusercontent.com/Olshansk/rss-feeds/main/feeds/feed_anthropic_news.xml", "limit": 15, "notify": true },
-    { "id": "anthropic-engineering", "name": "Anthropic Engineering (community feed)", "category": "claude", "type": "feed", "url": "https://raw.githubusercontent.com/Olshansk/rss-feeds/main/feeds/feed_anthropic_engineering.xml", "limit": 15 },
-    { "id": "hn-claude", "name": "Hacker News: Claude", "category": "claude", "type": "hn_algolia", "url": "https://hn.algolia.com/api/v1/search_by_date?query=claude&tags=story&numericFilters=points%3E50", "limit": 20 },
+    { "id": "claude-code-releases", "name": "Claude Code releases", "category": "ai", "type": "feed", "url": "https://github.com/anthropics/claude-code/releases.atom", "limit": 10, "notify": true },
+    { "id": "anthropic-news", "name": "Anthropic News (community feed)", "category": "ai", "type": "feed", "url": "https://raw.githubusercontent.com/Olshansk/rss-feeds/main/feeds/feed_anthropic_news.xml", "limit": 15, "notify": true },
+    { "id": "anthropic-engineering", "name": "Anthropic Engineering (community feed)", "category": "ai", "type": "feed", "url": "https://raw.githubusercontent.com/Olshansk/rss-feeds/main/feeds/feed_anthropic_engineering.xml", "limit": 15 },
+    { "id": "hn-claude", "name": "Hacker News: Claude", "category": "ai", "type": "hn_algolia", "url": "https://hn.algolia.com/api/v1/search_by_date?query=claude&tags=story&numericFilters=points%3E50", "limit": 20 },
 
     { "id": "openai-news", "name": "OpenAI News", "category": "ai", "type": "feed", "url": "https://openai.com/news/rss.xml", "limit": 15 },
     { "id": "google-ai", "name": "Google AI Blog", "category": "ai", "type": "feed", "url": "https://blog.google/technology/ai/rss/", "limit": 15 },

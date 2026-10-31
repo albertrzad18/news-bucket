@@ -20,36 +20,40 @@ const _v1Schema = [
   'CREATE INDEX articles_published_at ON articles (published_at)',
   'INSERT INTO articles (id, source_id, category, title, url, image_url, '
       "published_at, fetched_at, is_saved) VALUES ('https://example.com/a', "
-      "'src', 'ai', 'Saved before the update', 'https://example.com/a', "
+      "'src', 'claude', 'Saved before the update', 'https://example.com/a', "
       "'https://example.com/a.png', 1793400000, 1793400000, 1)",
   'PRAGMA user_version = 1',
 ];
 
 void main() {
-  test('upgrading from v1 drops image_url and keeps articles', () async {
-    final db = AppDatabase(
-      NativeDatabase.memory(
-        setup: (raw) {
-          for (final statement in _v1Schema) {
-            raw.execute(statement);
-          }
-        },
-      ),
-    );
-    addTearDown(db.close);
+  test(
+    'upgrading from v1 drops image_url, moves Claude to AI, keeps articles',
+    () async {
+      final db = AppDatabase(
+        NativeDatabase.memory(
+          setup: (raw) {
+            for (final statement in _v1Schema) {
+              raw.execute(statement);
+            }
+          },
+        ),
+      );
+      addTearDown(db.close);
 
-    final rows = await db.select(db.articles).get();
-    expect(rows.single.title, 'Saved before the update');
-    expect(rows.single.isSaved, isTrue);
+      final rows = await db.select(db.articles).get();
+      expect(rows.single.title, 'Saved before the update');
+      expect(rows.single.isSaved, isTrue);
+      expect(rows.single.category, 'ai');
 
-    final columns = await db
-        .customSelect('PRAGMA table_info(articles)')
-        .map((row) => row.read<String>('name'))
-        .get();
-    expect(columns, isNot(contains('image_url')));
-    expect(
-      await db.customSelect('PRAGMA user_version').getSingle(),
-      isA<QueryRow>().having((r) => r.read<int>('user_version'), 'v', 2),
-    );
-  });
+      final columns = await db
+          .customSelect('PRAGMA table_info(articles)')
+          .map((row) => row.read<String>('name'))
+          .get();
+      expect(columns, isNot(contains('image_url')));
+      expect(
+        await db.customSelect('PRAGMA user_version').getSingle(),
+        isA<QueryRow>().having((r) => r.read<int>('user_version'), 'v', 3),
+      );
+    },
+  );
 }

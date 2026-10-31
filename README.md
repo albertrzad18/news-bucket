@@ -1,7 +1,7 @@
 # News Bucket
 
 A small, personal Android news aggregator built with Flutter. It collects the most interesting
-headlines about **Claude / Anthropic**, **AI**, **programming**, **cybersecurity**,
+headlines about **AI** (with a focus on Claude / Anthropic), **programming**, **cybersecurity**,
 **stocks & ETFs** and **crypto** into one feed.
 
 ## Features
@@ -28,8 +28,7 @@ that file (`"notify": true` makes it a default notification source).
 
 | Category | Sources |
 |---|---|
-| Claude | Claude Code releases, Anthropic News & Engineering (community feeds), Hacker News |
-| AI | OpenAI, Google AI, Hugging Face, Simon Willison, arXiv, DEV #ai |
+| AI | Claude Code releases, Anthropic News & Engineering (community feeds), Hacker News (Claude), OpenAI, Google AI, Hugging Face, Simon Willison, arXiv, DEV #ai |
 | Programming | Hacker News, Lobsters, DEV, GitHub Blog |
 | Security | BleepingComputer, The Hacker News, Krebs, Schneier, Sekurak, Niebezpiecznik |
 | Stocks & ETFs | CNBC, MarketWatch, ETF Trends, Seeking Alpha (ETFs) |

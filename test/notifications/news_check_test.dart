@@ -33,7 +33,7 @@ class FakeFetcher extends SourceFetcher {
 SourceConfig src(String id, {bool notify = false}) => SourceConfig(
   id: id,
   name: 'Source $id',
-  category: NewsCategory.claude,
+  category: NewsCategory.ai,
   type: SourceType.feed,
   url: 'https://example.com/$id',
   notify: notify,
@@ -42,7 +42,7 @@ SourceConfig src(String id, {bool notify = false}) => SourceConfig(
 Article art(String title, {String sourceId = 'a'}) => Article(
   id: title,
   sourceId: sourceId,
-  category: NewsCategory.claude,
+  category: NewsCategory.ai,
   title: title,
   url: 'https://example.com/$title',
   publishedAt: DateTime.utc(2026),

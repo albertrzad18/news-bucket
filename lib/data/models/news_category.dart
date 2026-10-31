@@ -1,7 +1,6 @@
 /// Topic buckets used for filtering. Ids match `category` in
 /// `assets/sources.json`.
 enum NewsCategory {
-  claude('claude', 'Claude'),
   ai('ai', 'AI'),
   programming('programming', 'Programming'),
   security('security', 'Security'),

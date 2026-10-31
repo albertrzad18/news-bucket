@@ -56,7 +56,7 @@ class AppDatabase extends _$AppDatabase {
       );
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -69,6 +69,12 @@ class AppDatabase extends _$AppDatabase {
     onUpgrade: (m, from, to) async {
       // v2: the app no longer loads images.
       if (from < 2) await m.dropColumn(articles, 'image_url');
+      // v3: the Claude category was merged into AI.
+      if (from < 3) {
+        await customStatement(
+          "UPDATE articles SET category = 'ai' WHERE category = 'claude'",
+        );
+      }
     },
   );
 }
