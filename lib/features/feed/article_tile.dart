@@ -109,6 +109,15 @@ class ArticleTile extends ConsumerWidget {
                     ),
                   const Spacer(),
                   IconButton(
+                    tooltip: article.isRead ? 'Mark as unread' : 'Mark as read',
+                    icon: Icon(
+                      article.isRead
+                          ? Icons.mark_email_unread_outlined
+                          : Icons.drafts_outlined,
+                    ),
+                    onPressed: () => toggleRead(ref, article),
+                  ),
+                  IconButton(
                     tooltip: 'Share',
                     icon: const Icon(Icons.share_outlined),
                     onPressed: () => shareArticle(article),

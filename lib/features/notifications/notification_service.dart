@@ -18,7 +18,7 @@ abstract final class NotificationService {
   static Future<void> init({void Function(String? payload)? onTap}) async {
     await _plugin.initialize(
       settings: const InitializationSettings(
-        android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+        android: AndroidInitializationSettings('ic_notification'),
       ),
       onDidReceiveNotificationResponse: onTap == null
           ? null

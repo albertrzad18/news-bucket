@@ -166,7 +166,14 @@ class SettingsScreen extends ConsumerWidget {
   String _status(SourceStateRow? state) {
     if (state == null) return 'Not loaded yet';
     final ok = state.lastSuccessAt;
-    final updated = ok == null ? null : 'updated ${timeAgo(ok)} ago';
+    final ago = ok == null ? null : timeAgo(ok);
+    final updated = switch (ago) {
+      null => null,
+      'now' => 'updated just now',
+      // Older than a month: timeAgo returns a date.
+      _ when ago.contains('-') => 'updated on $ago',
+      _ => 'updated $ago ago',
+    };
     if (state.lastError != null) {
       return updated == null
           ? 'Failed to load'

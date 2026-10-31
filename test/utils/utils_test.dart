@@ -53,6 +53,13 @@ void main() {
       );
     });
 
+    test('htmlToText separates text that runs into a block', () {
+      expect(
+        htmlToText('Oct 2026:<p>Subject: hi</p>'),
+        'Oct 2026: Subject: hi',
+      );
+    });
+
     test('makeSnippet cuts at a word boundary with an ellipsis', () {
       final snippet = makeSnippet('word ' * 100, maxLength: 50)!;
       expect(snippet.length, lessThanOrEqualTo(51));
@@ -62,6 +69,17 @@ void main() {
     test('makeSnippet returns null for empty content', () {
       expect(makeSnippet('<p> </p>'), isNull);
       expect(makeSnippet(null), isNull);
+    });
+
+    test('makeSnippet drops a bare "Comments" link label', () {
+      expect(
+        makeSnippet('<p><a href="https://lobste.rs/s/x">Comments</a></p>'),
+        isNull,
+      );
+      expect(
+        makeSnippet('Comments about the release'),
+        'Comments about the release',
+      );
     });
   });
 

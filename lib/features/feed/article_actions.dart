@@ -28,6 +28,12 @@ Future<void> shareArticle(Article article) {
   );
 }
 
+Future<void> toggleRead(WidgetRef ref, Article article) {
+  return ref
+      .read(newsRepositoryProvider)
+      .markRead(article.id, read: !article.isRead);
+}
+
 Future<void> toggleSaved(WidgetRef ref, Article article) {
   return ref
       .read(newsRepositoryProvider)

@@ -27,7 +27,8 @@
 
     { "id": "cnbc", "name": "CNBC Top News", "category": "markets", "type": "feed", "url": "https://www.cnbc.com/id/100003114/device/rss/rss.html", "limit": 15 },
     { "id": "marketwatch", "name": "MarketWatch Top Stories", "category": "markets", "type": "feed", "url": "https://feeds.content.dowjones.io/public/rss/mw_topstories", "limit": 15 },
-    { "id": "etfcom", "name": "ETF.com", "category": "markets", "type": "feed", "url": "https://www.etf.com/rss.xml", "limit": 15 },
+    { "id": "etftrends", "name": "ETF Trends", "category": "markets", "type": "feed", "url": "https://www.etftrends.com/feed/", "limit": 15 },
+    { "id": "seekingalpha-etf", "name": "Seeking Alpha: ETFs", "category": "markets", "type": "feed", "url": "https://seekingalpha.com/tag/etf-portfolio-strategy.xml", "limit": 15 },
 
     { "id": "coindesk", "name": "CoinDesk", "category": "crypto", "type": "feed", "url": "https://www.coindesk.com/arc/outboundfeeds/rss/", "limit": 15 },
     { "id": "cointelegraph", "name": "Cointelegraph", "category": "crypto", "type": "feed", "url": "https://cointelegraph.com/rss", "limit": 15 },

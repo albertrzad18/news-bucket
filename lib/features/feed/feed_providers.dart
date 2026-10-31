@@ -41,7 +41,19 @@ final feedFilterProvider = NotifierProvider<FeedFilterNotifier, FeedFilter>(
 
 class FeedFilterNotifier extends Notifier<FeedFilter> {
   @override
-  FeedFilter build() => const FeedFilter();
+  FeedFilter build() {
+    // A source switched off in Settings disappears from the filter sheet, so
+    // drop it from the filter too or the feed would stay stuck on it.
+    ref.listen(disabledSourcesProvider, (_, disabled) {
+      if (state.sourceIds.any(disabled.contains)) {
+        state = FeedFilter(
+          categories: state.categories,
+          sourceIds: state.sourceIds.difference(disabled),
+        );
+      }
+    });
+    return const FeedFilter();
+  }
 
   void toggleCategory(NewsCategory category) {
     final next = {...state.categories};

@@ -98,11 +98,17 @@ String? _permalinkGuid(XmlElement item) {
   return value.startsWith('http') ? value : null;
 }
 
+/// Author avatars (GitHub release feeds, Gravatar) are not article images.
+final _avatarHost = RegExp(
+  r'(^|\.)(avatars\.githubusercontent|gravatar)\.com$',
+);
+
 String? _imageUrl(XmlElement item) {
   for (final element in item.childElements) {
     final name = element.localName;
     final url = element.getAttribute('url');
     if (url == null || url.isEmpty) continue;
+    if (_avatarHost.hasMatch(Uri.tryParse(url)?.host ?? '')) continue;
     if (name == 'thumbnail') return url;
     if (name == 'content' || name == 'enclosure') {
       final type = element.getAttribute('type') ?? '';

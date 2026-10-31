@@ -7,7 +7,7 @@ Dio createHttpClient() {
   return Dio(
     BaseOptions(
       connectTimeout: const Duration(seconds: 10),
-      receiveTimeout: const Duration(seconds: 15),
+      receiveTimeout: const Duration(seconds: 20),
       // Bytes, so we decode as UTF-8 ourselves regardless of what the server
       // claims in Content-Type.
       responseType: ResponseType.bytes,

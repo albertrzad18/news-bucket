@@ -21,21 +21,30 @@ String htmlToText(String input) {
   fragment
       .querySelectorAll('script, style, img, figure')
       .forEach((element) => element.remove());
-  // Without this, adjacent blocks ("<li>a</li><li>b</li>") would glue
-  // together as "ab" once the tags are gone.
+  // Without this, adjacent blocks ("<li>a</li><li>b</li>", "a<p>b") would
+  // glue together as "ab" once the tags are gone.
   for (final element in fragment.querySelectorAll(_blockSelector)) {
     final siblings = element.parentNode?.nodes;
     if (siblings == null) continue;
-    siblings.insert(siblings.indexOf(element) + 1, dom.Text(' '));
+    final index = siblings.indexOf(element);
+    siblings
+      ..insert(index + 1, dom.Text(' '))
+      ..insert(index, dom.Text(' '));
   }
   return collapseWhitespace(fragment.text ?? '');
 }
+
+/// Descriptions that are only a link label (Lobsters link posts) carry no
+/// information.
+const _boilerplateSnippets = {'comments'};
 
 /// Builds a short plain-text snippet, cut at a word boundary.
 String? makeSnippet(String? input, {int maxLength = 300}) {
   if (input == null) return null;
   final text = htmlToText(input);
-  if (text.isEmpty) return null;
+  if (text.isEmpty || _boilerplateSnippets.contains(text.toLowerCase())) {
+    return null;
+  }
   if (text.length <= maxLength) return text;
   final cut = text.substring(0, maxLength);
   final lastSpace = cut.lastIndexOf(' ');

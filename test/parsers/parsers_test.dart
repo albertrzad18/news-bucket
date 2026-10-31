@@ -71,6 +71,7 @@ void main() {
       expect(release.publishedAt, DateTime.utc(2026, 10, 26, 10, 30));
       expect(release.author, 'octocat');
       expect(release.snippet, 'Fixed a bug Faster startup');
+      expect(release.imageUrl, isNull, reason: 'author avatar is not an image');
     });
 
     test('ignores rel=self links and prefers published over updated', () {

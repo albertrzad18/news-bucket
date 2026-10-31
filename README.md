@@ -6,7 +6,7 @@ headlines about **Claude / Anthropic**, **AI**, **programming**, **cybersecurity
 
 ## Features
 
-- One feed from 26 sources, newest first, with category chips and a per-source filter
+- One feed from 27 sources, newest first, with category chips and a per-source filter
 - Pull to refresh; refreshes on its own when the data is older than 15 minutes
 - Works offline from a local cache (articles are kept for 30 days, saved ones forever)
 - Save articles for later, share them, read/unread state
@@ -31,7 +31,7 @@ that file (`"notify": true` makes it a default notification source).
 | AI | OpenAI, Google AI, Hugging Face, Simon Willison, arXiv, DEV #ai |
 | Programming | Hacker News, Lobsters, DEV, GitHub Blog |
 | Security | BleepingComputer, The Hacker News, Krebs, Schneier, Sekurak, Niebezpiecznik |
-| Stocks & ETFs | CNBC, MarketWatch, ETF.com |
+| Stocks & ETFs | CNBC, MarketWatch, ETF Trends, Seeking Alpha (ETFs) |
 | Crypto | CoinDesk, Cointelegraph, Decrypt |
 
 All content belongs to its respective publishers.
