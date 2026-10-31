@@ -37,6 +37,12 @@ class ArticleTile extends ConsumerWidget {
         ?.category;
 
     final metaStyle = meta.copyWith(color: read ? nb.read : s.onSurfaceVariant);
+    // "▲" comes from a fallback font with a taller line box; a forced strut
+    // keeps both parts of the meta line on one baseline.
+    final metaStrut = StrutStyle.fromTextStyle(
+      metaStyle,
+      forceStrutHeight: true,
+    );
     final tail = [
       timeAgo(article.publishedAt),
       if (article.score != null) '▲ ${article.score}',
@@ -60,11 +66,17 @@ class ArticleTile extends ConsumerWidget {
                     child: Text(
                       sourceName,
                       style: metaStyle,
+                      strutStyle: metaStrut,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  Text(' · $tail', style: metaStyle, maxLines: 1),
+                  Text(
+                    ' · $tail',
+                    style: metaStyle,
+                    strutStyle: metaStrut,
+                    maxLines: 1,
+                  ),
                 ],
               ),
             ),

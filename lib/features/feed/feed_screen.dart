@@ -90,6 +90,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
       onPressed: () => showModalBottomSheet<void>(
         context: context,
         isScrollControlled: true,
+        useSafeArea: true,
         builder: (_) => const FeedFilterSheet(),
       ),
     );
@@ -229,6 +230,10 @@ class _CategoryChip extends StatelessWidget {
       // Without an avatar the checkmark takes its place when selected;
       // with one, the chip would paint the check on top of the marker.
       avatar: selected ? null : Center(child: CategoryMarker(category)),
+      // The default avatar box is icon-sized, too wide for the 6dp marker.
+      avatarBoxConstraints: selected
+          ? null
+          : const BoxConstraints.tightFor(width: 10, height: 10),
       label: Text(category.label),
       selected: selected,
       onSelected: (_) => onSelected(),

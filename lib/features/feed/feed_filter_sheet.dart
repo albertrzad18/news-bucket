@@ -60,7 +60,7 @@ class FeedFilterSheet extends ConsumerWidget {
                       padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
                       child: Wrap(
                         spacing: 8,
-                        runSpacing: 8,
+                        runSpacing: 0, // chips are already padded to 48dp
                         children: [
                           for (final period in FeedPeriod.values)
                             ChoiceChip(
@@ -96,11 +96,18 @@ class FeedFilterSheet extends ConsumerWidget {
                         padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
                         child: Wrap(
                           spacing: 8,
-                          runSpacing: 8,
+                          runSpacing: 0, // chips are already padded to 48dp
                           children: [
                             for (final source in items)
                               FilterChip(
-                                label: Text(source.name),
+                                // Chips default to one faded line; long names
+                                // at large font sizes wrap instead.
+                                label: Text(
+                                  source.name,
+                                  maxLines: 2,
+                                  softWrap: true,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                                 selected: filter.sourceIds.contains(source.id),
                                 onSelected: (_) =>
                                     notifier.toggleSource(source.id),
