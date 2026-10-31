@@ -181,10 +181,16 @@ void main() {
     expect(find.text('Claude story'), findsWidgets);
     await tester.tap(find.text('Settings').last);
     await tester.pumpAndSettle();
-    final tile = tester.widget<SwitchListTile>(
-      find.widgetWithText(SwitchListTile, 'Claude Code releases'),
+    final row = find
+        .ancestor(
+          of: find.text('Claude Code releases'),
+          matching: find.byType(Row),
+        )
+        .last;
+    final toggle = tester.widget<Switch>(
+      find.descendant(of: row, matching: find.byType(Switch)),
     );
-    expect(tile.value, isFalse);
+    expect(toggle.value, isFalse);
   });
 
   testWidgets('switching to dark mode applies and persists the theme', (
