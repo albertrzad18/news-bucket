@@ -1,8 +1,9 @@
 # News Bucket: notes for Claude
 
-Personal Android news aggregator in Flutter (Claude/Anthropic, AI, programming, security,
-stocks & ETFs, crypto). Used by the owner and two friends; APKs are installed by hand from
-GitHub Releases, no Play Store, no backend. Public repo: https://github.com/albertrzad18/news-bucket
+Personal Android news aggregator in Flutter. Five categories: AI (the Claude/Anthropic sources
+belong here on purpose, the user merged the two), Programming, Security, Stocks & ETFs, Crypto.
+Used by the owner and two friends; APKs are installed by hand from GitHub Releases, no Play
+Store, no backend. Public repo: https://github.com/albertrzad18/news-bucket
 
 The user writes in Polish (often with typos): reply in Polish. Code, comments, commits, README
 and app UI are in English.
@@ -17,7 +18,8 @@ and app UI are in English.
 - Emulator: AVD `Medium_Phone_API_37.0` → `emulator-5554`. Start with
   `flutter emulators --launch Medium_Phone_API_37.0`. A black screen usually means the display
   is asleep: `adb shell input keyevent KEYCODE_WAKEUP`. The first opened article shows Chrome's
-  first-run screen: tap "Use without an account".
+  first-run screen: tap "Use without an account". To find tap targets, `adb shell uiautomator dump`
+  works: Flutter semantics appear as `content-desc` with bounds (tooltips, chip labels, tile text).
 - The network is slow (~130 KB/s at times). Run large downloads and first Gradle builds in the
   background and don't kill them for being slow. Gradle wrapper 9.8.2, JDK 21 locally (CI: 17).
 - Only one Gradle build at a time: if the user pressed F5 in VS Code, don't start another build
@@ -41,8 +43,16 @@ flutter build apk --debug --target-platform android-x64   # fastest build for th
 
 - `lib/core/` theme, go_router (`StatefulShellRoute`, tabs Feed / Saved / Settings), dio client,
   settings in shared_preferences, utils. `lib/data/` models, own RSS/Atom/RDF parser on `xml`,
-  JSON parsers (HN Algolia, DEV), drift DB (`articles`, `source_state`; 30-day retention, saved
+  JSON parsers (HN Algolia, DEV), drift DB (`articles`, `source_states`; 30-day retention, saved
   kept forever), `news_repository.dart`. `lib/features/` feed, saved, settings, notifications.
+- Feed filtering lives in `FeedFilter` (`feed_providers.dart`): category chips, sources and
+  publication period (`FeedPeriod`) in `feed_filter_sheet.dart`, and a search field in the app bar
+  (300 ms debounce; every word must match title or snippet via SQL `LIKE`, ASCII-only case folding).
+  Search and the period filter apply to the Feed tab only.
+- DB schema version 3. Users update by installing a new APK over the old one, so every schema
+  change needs a step in `AppDatabase.migration.onUpgrade` and a check in
+  `test/data/migration_test.dart` (it starts from the v1 schema shipped in v0.1.0). v2 dropped
+  `image_url`, v3 moved category `claude` to `ai`.
 - State: flutter_riverpod without codegen.
 - Background notifications: workmanager (hourly, network required) + flutter_local_notifications,
   one summary notification, `notified` flag on articles. WorkManager jobs live in a JobScheduler
@@ -63,6 +73,8 @@ flutter build apk --debug --target-platform android-x64   # fastest build for th
 
 - Content: only official RSS/Atom feeds and public APIs. Show title, source, date, short snippet
   and a link to the original; never scrape, never store full articles, no API keys.
+- No images at all: don't parse, store or show thumbnails. The user wants every card to look the
+  same.
 - Public repo: never commit `android/key.properties`, `*.jks` or anything secret. The release
   keystore is `C:\Users\Albert\keys\news-bucket.jks`. Don't upload signing secrets to GitHub
   yourself: the user runs `powershell -ExecutionPolicy Bypass -File tool/set_release_secrets.ps1`.
@@ -75,3 +87,11 @@ flutter build apk --debug --target-platform android-x64   # fastest build for th
   After a push, wait for CI (`gh run list --workflow CI --limit 1`) to be green. Releases: push a
   tag `v*` → `.github/workflows/release.yml` builds a signed APK and publishes a GitHub release.
 - Don't call the app finished until it has been checked on the emulator, screen by screen.
+
+## Status
+
+- v0.1.0 released 2026-10-31 (schema 1, still had the Claude category and images). `main` has
+  moved on (schema 3); the next release tag will be v0.2.0.
+- A visual redesign is being prepared by the user in Claude Design (clean, minimal, editorial; no
+  emoji, gradients or other "AI look"). When it arrives, implement it through ThemeData/ColorScheme
+  tokens and the existing Material 3 widgets.
