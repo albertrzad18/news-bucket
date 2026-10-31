@@ -3,9 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/time_utils.dart';
-import '../../core/widgets/category_marker.dart';
 import '../../data/models/article.dart';
-import '../../data/providers.dart';
 import 'article_actions.dart';
 import 'feed_providers.dart';
 
@@ -29,16 +27,13 @@ class ArticleTile extends ConsumerWidget {
     final sourceName =
         ref.watch(sourceNamesProvider).value?[article.sourceId] ??
         article.sourceId;
-    final category = ref
-        .watch(sourceCatalogProvider)
-        .value
-        ?.where((c) => c.id == article.sourceId)
-        .firstOrNull
-        ?.category;
 
     final metaStyle = meta.copyWith(color: read ? nb.read : s.onSurfaceVariant);
+    final categoryStyle = context.nbText.sectionLabel.copyWith(
+      color: metaStyle.color,
+    );
     // "▲" comes from a fallback font with a taller line box; a forced strut
-    // keeps both parts of the meta line on one baseline.
+    // keeps every part of the meta line on one baseline.
     final metaStrut = StrutStyle.fromTextStyle(
       metaStyle,
       forceStrutHeight: true,
@@ -57,11 +52,17 @@ class ArticleTile extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 14, 16, 0),
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.baseline,
+                textBaseline: TextBaseline.alphabetic,
                 children: [
-                  if (category != null) ...[
-                    CategoryMarker(category),
-                    const SizedBox(width: 6),
-                  ],
+                  // Category as a small uppercase kicker: "CRYPTO · CoinDesk".
+                  Text(
+                    article.category.label.toUpperCase(),
+                    style: categoryStyle,
+                    strutStyle: metaStrut,
+                    maxLines: 1,
+                  ),
+                  Text(' · ', style: metaStyle, strutStyle: metaStrut),
                   Flexible(
                     child: Text(
                       sourceName,
