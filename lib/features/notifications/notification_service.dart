@@ -1,3 +1,5 @@
+import 'dart:ui' show Color;
+
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'news_check.dart';
@@ -54,6 +56,8 @@ abstract final class NotificationService {
           _channel.channelId,
           _channel.channelName,
           channelDescription: _channel.channelDescription,
+          // Tints the small icon's circle with the app accent.
+          color: const Color(0xFF2B4C8C),
           styleInformation: content.lines.isEmpty
               ? BigTextStyleInformation(content.body)
               : InboxStyleInformation(
