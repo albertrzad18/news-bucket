@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/widgets/category_marker.dart';
+import '../../core/widgets/empty_state.dart';
 import '../../data/models/news_category.dart';
 import 'article_tile.dart';
 import 'feed_filter_sheet.dart';
@@ -56,8 +58,9 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
           SnackBar(
             content: Text(
               failures == 1
-                  ? '1 source failed to load'
-                  : '$failures sources failed to load',
+                  ? '1 source failed to load. Cached articles are still shown.'
+                  : '$failures sources failed to load. '
+                        'Cached articles are still shown.',
             ),
           ),
         );
@@ -86,7 +89,6 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
       ),
       onPressed: () => showModalBottomSheet<void>(
         context: context,
-        showDragHandle: true,
         isScrollControlled: true,
         builder: (_) => const FeedFilterSheet(),
       ),
@@ -135,47 +137,39 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
               ),
         body: Column(
           children: [
-            SizedBox(
-              height: 56,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 12),
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
+              child: Row(
+                spacing: 8,
                 children: [
                   for (final category in NewsCategory.values)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 4,
-                        vertical: 10,
-                      ),
-                      child: FilterChip(
-                        label: Text(category.label),
-                        selected: filter.categories.contains(category),
-                        onSelected: (_) => _filter.toggleCategory(category),
-                      ),
+                    _CategoryChip(
+                      category: category,
+                      selected: filter.categories.contains(category),
+                      onSelected: () => _filter.toggleCategory(category),
                     ),
                 ],
               ),
             ),
-            if (isRefreshing) const LinearProgressIndicator(minHeight: 2),
+            // Fixed slot so the list doesn't jump when a refresh starts.
+            SizedBox(
+              height: 2,
+              child: isRefreshing
+                  ? const LinearProgressIndicator()
+                  : const Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Divider(),
+                    ),
+            ),
             Expanded(
               child: RefreshIndicator(
                 onRefresh: _refresh,
                 child: articles.when(
                   data: (items) => items.isEmpty
-                      ? _EmptyState(
-                          message: isRefreshing
-                              ? 'Loading news…'
-                              : filter.query.isNotEmpty
-                              ? 'No articles match "${filter.query}".'
-                              : filter.isActive
-                              ? 'Nothing matches the current filters.'
-                              : 'No articles yet. Pull down to refresh.',
-                          onClear: filter.isActive && !isRefreshing
-                              ? _filter.clear
-                              : null,
-                        )
+                      ? _emptyFeed(filter, isRefreshing)
                       : ListView.builder(
-                          padding: const EdgeInsets.only(bottom: 16),
+                          padding: const EdgeInsets.only(top: 8, bottom: 16),
                           keyboardDismissBehavior:
                               ScrollViewKeyboardDismissBehavior.onDrag,
                           itemCount: items.length,
@@ -184,9 +178,11 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
                             article: items[i],
                           ),
                         ),
-                  loading: () =>
-                      const Center(child: CircularProgressIndicator()),
-                  error: (error, _) => _EmptyState(message: 'Error: $error'),
+                  loading: () => const EmptyState(title: 'Loading news…'),
+                  error: (error, _) => EmptyState(
+                    title: "Couldn't load articles.",
+                    body: '$error',
+                  ),
                 ),
               ),
             ),
@@ -195,35 +191,47 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
       ),
     );
   }
+
+  Widget _emptyFeed(FeedFilter filter, bool isRefreshing) {
+    if (isRefreshing) return const EmptyState(title: 'Loading news…');
+    if (!filter.isActive) {
+      return const EmptyState(
+        title: 'No articles yet.',
+        body: 'Pull down to refresh.',
+      );
+    }
+    return EmptyState(
+      title: filter.query.isNotEmpty
+          ? 'No articles match "${filter.query}".'
+          : 'Nothing matches the current filters.',
+      action: TextButton(
+        onPressed: _filter.clear,
+        child: const Text('Clear filters'),
+      ),
+    );
+  }
 }
 
-/// Scrollable so pull-to-refresh also works on an empty list.
-class _EmptyState extends StatelessWidget {
-  const _EmptyState({required this.message, this.onClear});
+class _CategoryChip extends StatelessWidget {
+  const _CategoryChip({
+    required this.category,
+    required this.selected,
+    required this.onSelected,
+  });
 
-  final String message;
-  final VoidCallback? onClear;
+  final NewsCategory category;
+  final bool selected;
+  final VoidCallback onSelected;
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      physics: const AlwaysScrollableScrollPhysics(),
-      children: [
-        const SizedBox(height: 120),
-        Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 32),
-            child: Text(message, textAlign: TextAlign.center),
-          ),
-        ),
-        if (onClear != null)
-          Center(
-            child: TextButton(
-              onPressed: onClear,
-              child: const Text('Clear filters'),
-            ),
-          ),
-      ],
+    return FilterChip(
+      // Without an avatar the checkmark takes its place when selected;
+      // with one, the chip would paint the check on top of the marker.
+      avatar: selected ? null : Center(child: CategoryMarker(category)),
+      label: Text(category.label),
+      selected: selected,
+      onSelected: (_) => onSelected(),
     );
   }
 }

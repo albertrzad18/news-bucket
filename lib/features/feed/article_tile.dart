@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/theme/app_theme.dart';
 import '../../core/utils/time_utils.dart';
+import '../../core/widgets/category_marker.dart';
 import '../../data/models/article.dart';
 import '../../data/providers.dart';
 import 'article_actions.dart';
@@ -52,14 +53,7 @@ class ArticleTile extends ConsumerWidget {
               child: Row(
                 children: [
                   if (category != null) ...[
-                    Container(
-                      width: 6,
-                      height: 6,
-                      decoration: BoxDecoration(
-                        color: nb.category(category.id),
-                        borderRadius: BorderRadius.circular(1),
-                      ),
-                    ),
+                    CategoryMarker(category),
                     const SizedBox(width: 6),
                   ],
                   Flexible(
