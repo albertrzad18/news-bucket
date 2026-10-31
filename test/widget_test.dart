@@ -141,6 +141,31 @@ void main() {
     expect(find.text('Only story'), findsOneWidget);
   });
 
+  testWidgets('search narrows the feed and closing it resets the query', (
+    tester,
+  ) async {
+    final container = await pumpApp(
+      tester,
+      articles: {
+        NewsCategory.claude: ['Claude story'],
+        NewsCategory.programming: ['Rust story'],
+      },
+    );
+
+    await tester.tap(find.byTooltip('Search'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), 'RUST');
+    await tester.pump(const Duration(milliseconds: 300)); // debounce
+    await settle(tester);
+    expect(find.text('Rust story'), findsWidgets);
+    expect(find.text('Claude story'), findsNothing);
+
+    await tester.tap(find.byTooltip('Close search'));
+    await settle(tester);
+    expect(find.byType(TextField), findsNothing);
+    expect(container.read(feedFilterProvider).query, isEmpty);
+  });
+
   testWidgets('a disabled source disappears from the feed', (tester) async {
     await pumpApp(
       tester,

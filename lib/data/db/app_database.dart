@@ -12,7 +12,6 @@ class Articles extends Table {
   TextColumn get title => text()();
   TextColumn get url => text()();
   TextColumn get snippet => text().nullable()();
-  TextColumn get imageUrl => text().nullable()();
   TextColumn get author => text().nullable()();
   IntColumn get score => integer().nullable()();
   IntColumn get commentCount => integer().nullable()();
@@ -57,7 +56,7 @@ class AppDatabase extends _$AppDatabase {
       );
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -66,6 +65,10 @@ class AppDatabase extends _$AppDatabase {
       await customStatement(
         'CREATE INDEX articles_published_at ON articles (published_at)',
       );
+    },
+    onUpgrade: (m, from, to) async {
+      // v2: the app no longer loads images.
+      if (from < 2) await m.dropColumn(articles, 'image_url');
     },
   );
 }

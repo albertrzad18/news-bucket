@@ -39,64 +39,46 @@ class ArticleTile extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          meta,
-                          style: theme.textTheme.labelMedium?.copyWith(
-                            color: scheme.primary,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          article.title,
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            color: titleColor,
-                            fontWeight: article.isRead
-                                ? FontWeight.normal
-                                : FontWeight.w600,
-                          ),
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        if (article.snippet != null) ...[
-                          const SizedBox(height: 4),
-                          Text(
-                            article.snippet!,
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              color: scheme.onSurfaceVariant,
-                            ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ],
-                    ),
-                  ),
-                  if (article.imageUrl != null) ...[
-                    const SizedBox(width: 12),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 8),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Image.network(
-                          article.imageUrl!,
-                          width: 72,
-                          height: 72,
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, _, _) => const SizedBox.shrink(),
-                        ),
+              Padding(
+                // The card's right padding is narrow for the icon buttons;
+                // text gets the same 16 as on the left.
+                padding: const EdgeInsets.only(right: 8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      meta,
+                      style: theme.textTheme.labelMedium?.copyWith(
+                        color: scheme.primary,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
+                    const SizedBox(height: 4),
+                    Text(
+                      article.title,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        color: titleColor,
+                        fontWeight: article.isRead
+                            ? FontWeight.normal
+                            : FontWeight.w600,
+                      ),
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    if (article.snippet != null) ...[
+                      const SizedBox(height: 4),
+                      Text(
+                        article.snippet!,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: scheme.onSurfaceVariant,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
                   ],
-                ],
+                ),
               ),
               Row(
                 children: [

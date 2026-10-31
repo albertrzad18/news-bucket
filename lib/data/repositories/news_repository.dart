@@ -106,7 +106,6 @@ class NewsRepository {
               (old) => ArticlesCompanion(
                 title: Value(article.title),
                 snippet: Value(article.snippet),
-                imageUrl: Value(article.imageUrl),
                 score: Value(article.score),
                 commentCount: Value(article.commentCount),
               ),
@@ -151,14 +150,20 @@ class NewsRepository {
   }
 
   /// Newest first. Empty filter sets mean "no filter".
+  ///
+  /// [query] matches articles whose title or snippet contains every word of
+  /// it (case-insensitive for ASCII letters, as SQLite's LIKE).
   Stream<List<Article>> watchArticles({
     Set<NewsCategory> categories = const {},
     Set<String> sourceIds = const {},
     Set<String> excludedSourceIds = const {},
     bool savedOnly = false,
+    DateTime? publishedAfter,
+    String query = '',
     int limit = 500,
   }) {
-    final query = _db.select(_db.articles)
+    final words = query.split(_whitespace).where((w) => w.isNotEmpty);
+    final select = _db.select(_db.articles)
       ..where((t) {
         final conditions = <Expression<bool>>[
           if (categories.isNotEmpty)
@@ -167,6 +172,11 @@ class NewsRepository {
           if (excludedSourceIds.isNotEmpty)
             t.sourceId.isNotIn(excludedSourceIds),
           if (savedOnly) t.isSaved.equals(true),
+          if (publishedAfter != null)
+            t.publishedAt.isBiggerOrEqualValue(publishedAfter),
+          for (final word in words)
+            t.title.like(_likePattern(word), escapeChar: r'\') |
+                t.snippet.like(_likePattern(word), escapeChar: r'\'),
         ];
         return conditions.isEmpty
             ? const Constant(true)
@@ -174,8 +184,15 @@ class NewsRepository {
       })
       ..orderBy([(t) => OrderingTerm.desc(t.publishedAt)])
       ..limit(limit);
-    return query.watch().map((rows) => rows.map(_toArticle).toList());
+    return select.watch().map((rows) => rows.map(_toArticle).toList());
   }
+
+  static final _whitespace = RegExp(r'\s+');
+
+  /// `%word%` with LIKE wildcards in [word] escaped, so "50%" or "snake_case"
+  /// match literally.
+  static String _likePattern(String word) =>
+      '%${word.replaceAllMapped(RegExp(r'[\\%_]'), (m) => '\\${m[0]}')}%';
 
   Stream<List<SourceStateRow>> watchSourceStates() =>
       _db.select(_db.sourceStates).watch();
@@ -219,7 +236,6 @@ class NewsRepository {
       title: article.title,
       url: article.url,
       snippet: Value(article.snippet),
-      imageUrl: Value(article.imageUrl),
       author: Value(article.author),
       score: Value(article.score),
       commentCount: Value(article.commentCount),
@@ -238,7 +254,6 @@ class NewsRepository {
       url: row.url,
       publishedAt: row.publishedAt,
       snippet: row.snippet,
-      imageUrl: row.imageUrl,
       author: row.author,
       score: row.score,
       commentCount: row.commentCount,

@@ -64,7 +64,6 @@ List<Article> parseDevTo(String body, SourceConfig source) {
             parseFeedDate(item['published_at'] as String?) ??
             DateTime.now().toUtc(),
         snippet: makeSnippet(item['description'] as String?),
-        imageUrl: item['cover_image'] as String?,
         author: user?['name'] as String?,
         score:
             item['public_reactions_count'] as int? ??

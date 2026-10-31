@@ -51,7 +51,6 @@ Article? _parseRssItem(XmlElement item, SourceConfig source, DateTime now) {
         parseFeedDate(_text(item, 'date')) ??
         now,
     snippet: makeSnippet(_text(item, 'description') ?? _text(item, 'encoded')),
-    imageUrl: _imageUrl(item),
     author: _text(item, 'creator') ?? _text(item, 'author'),
     commentsUrl: _text(item, 'comments'),
   );
@@ -74,7 +73,6 @@ Article? _parseAtomEntry(XmlElement entry, SourceConfig source, DateTime now) {
         parseFeedDate(_text(entry, 'updated')) ??
         now,
     snippet: makeSnippet(_text(entry, 'summary') ?? _text(entry, 'content')),
-    imageUrl: _imageUrl(entry),
     author: author == null ? null : _text(author, 'name'),
   );
 }
@@ -96,27 +94,6 @@ String? _permalinkGuid(XmlElement item) {
   if (guid == null || guid.getAttribute('isPermaLink') == 'false') return null;
   final value = guid.innerText.trim();
   return value.startsWith('http') ? value : null;
-}
-
-/// Author avatars (GitHub release feeds, Gravatar) are not article images.
-final _avatarHost = RegExp(
-  r'(^|\.)(avatars\.githubusercontent|gravatar)\.com$',
-);
-
-String? _imageUrl(XmlElement item) {
-  for (final element in item.childElements) {
-    final name = element.localName;
-    final url = element.getAttribute('url');
-    if (url == null || url.isEmpty) continue;
-    if (_avatarHost.hasMatch(Uri.tryParse(url)?.host ?? '')) continue;
-    if (name == 'thumbnail') return url;
-    if (name == 'content' || name == 'enclosure') {
-      final type = element.getAttribute('type') ?? '';
-      final medium = element.getAttribute('medium') ?? '';
-      if (type.startsWith('image/') || medium == 'image') return url;
-    }
-  }
-  return null;
 }
 
 XmlElement? _child(XmlElement parent, String localName) {

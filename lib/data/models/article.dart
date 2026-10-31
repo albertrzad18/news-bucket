@@ -9,7 +9,6 @@ class Article {
     required this.url,
     required this.publishedAt,
     this.snippet,
-    this.imageUrl,
     this.author,
     this.score,
     this.commentCount,
@@ -26,7 +25,6 @@ class Article {
   final String url;
   final DateTime publishedAt;
   final String? snippet;
-  final String? imageUrl;
   final String? author;
 
   /// Points/reactions for sources that have them (Hacker News, DEV).

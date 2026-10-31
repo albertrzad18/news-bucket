@@ -69,17 +69,6 @@ class $ArticlesTable extends Articles
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _imageUrlMeta = const VerificationMeta(
-    'imageUrl',
-  );
-  @override
-  late final GeneratedColumn<String> imageUrl = GeneratedColumn<String>(
-    'image_url',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-  );
   static const VerificationMeta _authorMeta = const VerificationMeta('author');
   @override
   late final GeneratedColumn<String> author = GeneratedColumn<String>(
@@ -193,7 +182,6 @@ class $ArticlesTable extends Articles
     title,
     url,
     snippet,
-    imageUrl,
     author,
     score,
     commentCount,
@@ -257,12 +245,6 @@ class $ArticlesTable extends Articles
       context.handle(
         _snippetMeta,
         snippet.isAcceptableOrUnknown(data['snippet']!, _snippetMeta),
-      );
-    }
-    if (data.containsKey('image_url')) {
-      context.handle(
-        _imageUrlMeta,
-        imageUrl.isAcceptableOrUnknown(data['image_url']!, _imageUrlMeta),
       );
     }
     if (data.containsKey('author')) {
@@ -365,10 +347,6 @@ class $ArticlesTable extends Articles
         DriftSqlType.string,
         data['${effectivePrefix}snippet'],
       ),
-      imageUrl: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}image_url'],
-      ),
       author: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}author'],
@@ -422,7 +400,6 @@ class ArticleRow extends DataClass implements Insertable<ArticleRow> {
   final String title;
   final String url;
   final String? snippet;
-  final String? imageUrl;
   final String? author;
   final int? score;
   final int? commentCount;
@@ -443,7 +420,6 @@ class ArticleRow extends DataClass implements Insertable<ArticleRow> {
     required this.title,
     required this.url,
     this.snippet,
-    this.imageUrl,
     this.author,
     this.score,
     this.commentCount,
@@ -464,9 +440,6 @@ class ArticleRow extends DataClass implements Insertable<ArticleRow> {
     map['url'] = Variable<String>(url);
     if (!nullToAbsent || snippet != null) {
       map['snippet'] = Variable<String>(snippet);
-    }
-    if (!nullToAbsent || imageUrl != null) {
-      map['image_url'] = Variable<String>(imageUrl);
     }
     if (!nullToAbsent || author != null) {
       map['author'] = Variable<String>(author);
@@ -498,9 +471,6 @@ class ArticleRow extends DataClass implements Insertable<ArticleRow> {
       snippet: snippet == null && nullToAbsent
           ? const Value.absent()
           : Value(snippet),
-      imageUrl: imageUrl == null && nullToAbsent
-          ? const Value.absent()
-          : Value(imageUrl),
       author: author == null && nullToAbsent
           ? const Value.absent()
           : Value(author),
@@ -533,7 +503,6 @@ class ArticleRow extends DataClass implements Insertable<ArticleRow> {
       title: serializer.fromJson<String>(json['title']),
       url: serializer.fromJson<String>(json['url']),
       snippet: serializer.fromJson<String?>(json['snippet']),
-      imageUrl: serializer.fromJson<String?>(json['imageUrl']),
       author: serializer.fromJson<String?>(json['author']),
       score: serializer.fromJson<int?>(json['score']),
       commentCount: serializer.fromJson<int?>(json['commentCount']),
@@ -555,7 +524,6 @@ class ArticleRow extends DataClass implements Insertable<ArticleRow> {
       'title': serializer.toJson<String>(title),
       'url': serializer.toJson<String>(url),
       'snippet': serializer.toJson<String?>(snippet),
-      'imageUrl': serializer.toJson<String?>(imageUrl),
       'author': serializer.toJson<String?>(author),
       'score': serializer.toJson<int?>(score),
       'commentCount': serializer.toJson<int?>(commentCount),
@@ -575,7 +543,6 @@ class ArticleRow extends DataClass implements Insertable<ArticleRow> {
     String? title,
     String? url,
     Value<String?> snippet = const Value.absent(),
-    Value<String?> imageUrl = const Value.absent(),
     Value<String?> author = const Value.absent(),
     Value<int?> score = const Value.absent(),
     Value<int?> commentCount = const Value.absent(),
@@ -592,7 +559,6 @@ class ArticleRow extends DataClass implements Insertable<ArticleRow> {
     title: title ?? this.title,
     url: url ?? this.url,
     snippet: snippet.present ? snippet.value : this.snippet,
-    imageUrl: imageUrl.present ? imageUrl.value : this.imageUrl,
     author: author.present ? author.value : this.author,
     score: score.present ? score.value : this.score,
     commentCount: commentCount.present ? commentCount.value : this.commentCount,
@@ -611,7 +577,6 @@ class ArticleRow extends DataClass implements Insertable<ArticleRow> {
       title: data.title.present ? data.title.value : this.title,
       url: data.url.present ? data.url.value : this.url,
       snippet: data.snippet.present ? data.snippet.value : this.snippet,
-      imageUrl: data.imageUrl.present ? data.imageUrl.value : this.imageUrl,
       author: data.author.present ? data.author.value : this.author,
       score: data.score.present ? data.score.value : this.score,
       commentCount: data.commentCount.present
@@ -639,7 +604,6 @@ class ArticleRow extends DataClass implements Insertable<ArticleRow> {
           ..write('title: $title, ')
           ..write('url: $url, ')
           ..write('snippet: $snippet, ')
-          ..write('imageUrl: $imageUrl, ')
           ..write('author: $author, ')
           ..write('score: $score, ')
           ..write('commentCount: $commentCount, ')
@@ -661,7 +625,6 @@ class ArticleRow extends DataClass implements Insertable<ArticleRow> {
     title,
     url,
     snippet,
-    imageUrl,
     author,
     score,
     commentCount,
@@ -682,7 +645,6 @@ class ArticleRow extends DataClass implements Insertable<ArticleRow> {
           other.title == this.title &&
           other.url == this.url &&
           other.snippet == this.snippet &&
-          other.imageUrl == this.imageUrl &&
           other.author == this.author &&
           other.score == this.score &&
           other.commentCount == this.commentCount &&
@@ -701,7 +663,6 @@ class ArticlesCompanion extends UpdateCompanion<ArticleRow> {
   final Value<String> title;
   final Value<String> url;
   final Value<String?> snippet;
-  final Value<String?> imageUrl;
   final Value<String?> author;
   final Value<int?> score;
   final Value<int?> commentCount;
@@ -719,7 +680,6 @@ class ArticlesCompanion extends UpdateCompanion<ArticleRow> {
     this.title = const Value.absent(),
     this.url = const Value.absent(),
     this.snippet = const Value.absent(),
-    this.imageUrl = const Value.absent(),
     this.author = const Value.absent(),
     this.score = const Value.absent(),
     this.commentCount = const Value.absent(),
@@ -738,7 +698,6 @@ class ArticlesCompanion extends UpdateCompanion<ArticleRow> {
     required String title,
     required String url,
     this.snippet = const Value.absent(),
-    this.imageUrl = const Value.absent(),
     this.author = const Value.absent(),
     this.score = const Value.absent(),
     this.commentCount = const Value.absent(),
@@ -763,7 +722,6 @@ class ArticlesCompanion extends UpdateCompanion<ArticleRow> {
     Expression<String>? title,
     Expression<String>? url,
     Expression<String>? snippet,
-    Expression<String>? imageUrl,
     Expression<String>? author,
     Expression<int>? score,
     Expression<int>? commentCount,
@@ -782,7 +740,6 @@ class ArticlesCompanion extends UpdateCompanion<ArticleRow> {
       if (title != null) 'title': title,
       if (url != null) 'url': url,
       if (snippet != null) 'snippet': snippet,
-      if (imageUrl != null) 'image_url': imageUrl,
       if (author != null) 'author': author,
       if (score != null) 'score': score,
       if (commentCount != null) 'comment_count': commentCount,
@@ -803,7 +760,6 @@ class ArticlesCompanion extends UpdateCompanion<ArticleRow> {
     Value<String>? title,
     Value<String>? url,
     Value<String?>? snippet,
-    Value<String?>? imageUrl,
     Value<String?>? author,
     Value<int?>? score,
     Value<int?>? commentCount,
@@ -822,7 +778,6 @@ class ArticlesCompanion extends UpdateCompanion<ArticleRow> {
       title: title ?? this.title,
       url: url ?? this.url,
       snippet: snippet ?? this.snippet,
-      imageUrl: imageUrl ?? this.imageUrl,
       author: author ?? this.author,
       score: score ?? this.score,
       commentCount: commentCount ?? this.commentCount,
@@ -856,9 +811,6 @@ class ArticlesCompanion extends UpdateCompanion<ArticleRow> {
     }
     if (snippet.present) {
       map['snippet'] = Variable<String>(snippet.value);
-    }
-    if (imageUrl.present) {
-      map['image_url'] = Variable<String>(imageUrl.value);
     }
     if (author.present) {
       map['author'] = Variable<String>(author.value);
@@ -902,7 +854,6 @@ class ArticlesCompanion extends UpdateCompanion<ArticleRow> {
           ..write('title: $title, ')
           ..write('url: $url, ')
           ..write('snippet: $snippet, ')
-          ..write('imageUrl: $imageUrl, ')
           ..write('author: $author, ')
           ..write('score: $score, ')
           ..write('commentCount: $commentCount, ')
@@ -1329,7 +1280,6 @@ typedef $$ArticlesTableCreateCompanionBuilder = ArticlesCompanion Function({
   required String title,
   required String url,
   Value<String?> snippet,
-  Value<String?> imageUrl,
   Value<String?> author,
   Value<int?> score,
   Value<int?> commentCount,
@@ -1348,7 +1298,6 @@ typedef $$ArticlesTableUpdateCompanionBuilder = ArticlesCompanion Function({
   Value<String> title,
   Value<String> url,
   Value<String?> snippet,
-  Value<String?> imageUrl,
   Value<String?> author,
   Value<int?> score,
   Value<int?> commentCount,
@@ -1397,11 +1346,6 @@ class $$ArticlesTableFilterComposer
 
   ColumnFilters<String> get snippet => $composableBuilder(
     column: $table.snippet,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get imageUrl => $composableBuilder(
-    column: $table.imageUrl,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -1490,11 +1434,6 @@ class $$ArticlesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get imageUrl => $composableBuilder(
-    column: $table.imageUrl,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   ColumnOrderings<String> get author => $composableBuilder(
     column: $table.author,
     builder: (column) => ColumnOrderings(column),
@@ -1568,9 +1507,6 @@ class $$ArticlesTableAnnotationComposer
   GeneratedColumn<String> get snippet =>
       $composableBuilder(column: $table.snippet, builder: (column) => column);
 
-  GeneratedColumn<String> get imageUrl =>
-      $composableBuilder(column: $table.imageUrl, builder: (column) => column);
-
   GeneratedColumn<String> get author =>
       $composableBuilder(column: $table.author, builder: (column) => column);
 
@@ -1642,7 +1578,6 @@ class $$ArticlesTableTableManager
                 Value<String> title = const Value.absent(),
                 Value<String> url = const Value.absent(),
                 Value<String?> snippet = const Value.absent(),
-                Value<String?> imageUrl = const Value.absent(),
                 Value<String?> author = const Value.absent(),
                 Value<int?> score = const Value.absent(),
                 Value<int?> commentCount = const Value.absent(),
@@ -1660,7 +1595,6 @@ class $$ArticlesTableTableManager
                 title: title,
                 url: url,
                 snippet: snippet,
-                imageUrl: imageUrl,
                 author: author,
                 score: score,
                 commentCount: commentCount,
@@ -1680,7 +1614,6 @@ class $$ArticlesTableTableManager
                 required String title,
                 required String url,
                 Value<String?> snippet = const Value.absent(),
-                Value<String?> imageUrl = const Value.absent(),
                 Value<String?> author = const Value.absent(),
                 Value<int?> score = const Value.absent(),
                 Value<int?> commentCount = const Value.absent(),
@@ -1698,7 +1631,6 @@ class $$ArticlesTableTableManager
                 title: title,
                 url: url,
                 snippet: snippet,
-                imageUrl: imageUrl,
                 author: author,
                 score: score,
                 commentCount: commentCount,

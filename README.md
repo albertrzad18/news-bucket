@@ -7,6 +7,7 @@ headlines about **Claude / Anthropic**, **AI**, **programming**, **cybersecurity
 ## Features
 
 - One feed from 27 sources, newest first, with category chips and a per-source filter
+- Search in titles and snippets; filter by publication date (24 hours, 3 days, a week)
 - Pull to refresh; refreshes on its own when the data is older than 15 minutes
 - Works offline from a local cache (articles are kept for 30 days, saved ones forever)
 - Save articles for later, share them, read/unread state
@@ -20,7 +21,7 @@ headlines about **Claude / Anthropic**, **AI**, **programming**, **cybersecurity
 - Articles come only from **official RSS/Atom feeds and public APIs** (Hacker News via Algolia,
   DEV.to, arXiv, GitHub releases). Nothing is scraped and no API keys are needed.
 - The app shows the title, source, date and a short snippet, and opens the original article in
-  the browser. Full article content is never copied or stored.
+  the browser. Full article content is never copied or stored, and no images are downloaded.
 
 Sources live in [`assets/sources.json`](assets/sources.json). Add or remove a source by editing
 that file (`"notify": true` makes it a default notification source).

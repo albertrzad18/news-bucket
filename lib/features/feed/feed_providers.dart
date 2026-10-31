@@ -25,14 +25,62 @@ final sourceStatesProvider = StreamProvider<List<SourceStateRow>>((ref) {
   return ref.watch(newsRepositoryProvider).watchSourceStates();
 });
 
+/// How far back the feed reaches, by publication date.
+enum FeedPeriod {
+  any('Any time', null),
+  day('Last 24 hours', Duration(days: 1)),
+  threeDays('Last 3 days', Duration(days: 3)),
+  week('Last week', Duration(days: 7));
+
+  const FeedPeriod(this.label, this.duration);
+
+  final String label;
+  final Duration? duration;
+
+  /// Oldest publication time that passes, or null for [any].
+  DateTime? cutoff(DateTime now) =>
+      duration == null ? null : now.toUtc().subtract(duration!);
+}
+
 class FeedFilter {
-  const FeedFilter({this.categories = const {}, this.sourceIds = const {}});
+  const FeedFilter({
+    this.categories = const {},
+    this.sourceIds = const {},
+    this.period = FeedPeriod.any,
+    this.query = '',
+  });
 
   /// Empty means "all".
   final Set<NewsCategory> categories;
   final Set<String> sourceIds;
+  final FeedPeriod period;
 
-  bool get isActive => categories.isNotEmpty || sourceIds.isNotEmpty;
+  /// Text typed into the search field; empty means no search.
+  final String query;
+
+  bool get isActive =>
+      categories.isNotEmpty ||
+      sourceIds.isNotEmpty ||
+      period != FeedPeriod.any ||
+      query.isNotEmpty;
+
+  /// Filters set in the filter sheet, for the badge on its button.
+  int get sheetFilterCount =>
+      sourceIds.length + (period == FeedPeriod.any ? 0 : 1);
+
+  FeedFilter copyWith({
+    Set<NewsCategory>? categories,
+    Set<String>? sourceIds,
+    FeedPeriod? period,
+    String? query,
+  }) {
+    return FeedFilter(
+      categories: categories ?? this.categories,
+      sourceIds: sourceIds ?? this.sourceIds,
+      period: period ?? this.period,
+      query: query ?? this.query,
+    );
+  }
 }
 
 final feedFilterProvider = NotifierProvider<FeedFilterNotifier, FeedFilter>(
@@ -46,10 +94,7 @@ class FeedFilterNotifier extends Notifier<FeedFilter> {
     // drop it from the filter too or the feed would stay stuck on it.
     ref.listen(disabledSourcesProvider, (_, disabled) {
       if (state.sourceIds.any(disabled.contains)) {
-        state = FeedFilter(
-          categories: state.categories,
-          sourceIds: state.sourceIds.difference(disabled),
-        );
+        state = state.copyWith(sourceIds: state.sourceIds.difference(disabled));
       }
     });
     return const FeedFilter();
@@ -58,16 +103,22 @@ class FeedFilterNotifier extends Notifier<FeedFilter> {
   void toggleCategory(NewsCategory category) {
     final next = {...state.categories};
     if (!next.remove(category)) next.add(category);
-    state = FeedFilter(categories: next, sourceIds: state.sourceIds);
+    state = state.copyWith(categories: next);
   }
 
   void toggleSource(String sourceId) {
     final next = {...state.sourceIds};
     if (!next.remove(sourceId)) next.add(sourceId);
-    state = FeedFilter(categories: state.categories, sourceIds: next);
+    state = state.copyWith(sourceIds: next);
   }
 
-  void clearSources() => state = FeedFilter(categories: state.categories);
+  void setPeriod(FeedPeriod period) => state = state.copyWith(period: period);
+
+  void setQuery(String query) => state = state.copyWith(query: query.trim());
+
+  /// Resets what the filter sheet controls: sources and period.
+  void clearSheetFilters() =>
+      state = FeedFilter(categories: state.categories, query: state.query);
 
   void clear() => state = const FeedFilter();
 }
@@ -81,6 +132,8 @@ final feedArticlesProvider = StreamProvider<List<Article>>((ref) {
         categories: filter.categories,
         sourceIds: filter.sourceIds,
         excludedSourceIds: disabled,
+        publishedAfter: filter.period.cutoff(DateTime.now()),
+        query: filter.query,
       );
 });
 

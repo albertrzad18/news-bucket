@@ -44,7 +44,6 @@ void main() {
       expect(article.url, startsWith('https://Example.com/post-1/'));
       expect(article.publishedAt, DateTime.utc(2026, 10, 27, 10));
       expect(article.author, 'Jane Doe');
-      expect(article.imageUrl, 'https://example.com/img.png');
       expect(article.commentsUrl, 'https://example.com/post-1#comments');
       expect(article.snippet, 'Hello world, this is a snippet.');
     });
@@ -71,7 +70,6 @@ void main() {
       expect(release.publishedAt, DateTime.utc(2026, 10, 26, 10, 30));
       expect(release.author, 'octocat');
       expect(release.snippet, 'Fixed a bug Faster startup');
-      expect(release.imageUrl, isNull, reason: 'author avatar is not an image');
     });
 
     test('ignores rel=self links and prefers published over updated', () {
@@ -133,7 +131,6 @@ void main() {
     expect(article.score, 77);
     expect(article.commentCount, 5);
     expect(article.author, 'Dev User');
-    expect(article.imageUrl, 'https://dev.to/cover.png');
     expect(article.publishedAt, DateTime.utc(2026, 10, 27, 9, 15));
   });
 

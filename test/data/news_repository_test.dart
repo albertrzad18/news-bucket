@@ -37,12 +37,14 @@ Article art(
   NewsCategory category = NewsCategory.ai,
   String? title,
   int day = 1,
+  String? snippet,
 }) {
   return Article(
     id: 'https://example.com/$id',
     sourceId: sourceId,
     category: category,
     title: title ?? 'Title $id',
+    snippet: snippet,
     url: 'https://example.com/$id',
     publishedAt: DateTime.utc(2026, 10, day),
   );
@@ -193,5 +195,39 @@ void main() {
     expect(await repo.lastRefreshAt(), isNull);
     await repo.refresh([src('a')]);
     expect(await repo.lastRefreshAt(), isNotNull);
+  });
+
+  test(
+    'search matches every word in title or snippet, case-insensitive',
+    () async {
+      fetcher.responses['a'] = [
+        art('1', title: 'Claude Code 2.1 released'),
+        art('2', title: 'Rust news', snippet: 'A new claude integration'),
+        art('3', title: 'Unrelated'),
+        art('4', title: 'Up 50% in a week'),
+        art('5', title: 'Up 500 points'),
+      ];
+      await repo.refresh([src('a')]);
+
+      Future<List<String>> ids(String query) async => [
+        for (final a in await repo.watchArticles(query: query).first)
+          a.id.split('/').last,
+      ];
+
+      expect(await ids('CLAUDE'), unorderedEquals(['1', '2']));
+      expect(await ids('claude  released'), ['1']);
+      expect(await ids('50%'), ['4'], reason: '% is not a wildcard');
+      expect(await ids(''), hasLength(5));
+    },
+  );
+
+  test('publishedAfter keeps only newer articles', () async {
+    fetcher.responses['a'] = [art('old', day: 1), art('new', day: 20)];
+    await repo.refresh([src('a')]);
+
+    final recent = await repo
+        .watchArticles(publishedAfter: DateTime.utc(2026, 10, 10))
+        .first;
+    expect(recent.single.id, 'https://example.com/new');
   });
 }
