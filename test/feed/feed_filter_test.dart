@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:news_bucket/core/settings/preferences.dart';
 import 'package:news_bucket/core/settings/source_settings.dart';
 import 'package:news_bucket/data/models/news_category.dart';
+import 'package:news_bucket/features/feed/feed_filter_sheet.dart';
 import 'package:news_bucket/features/feed/feed_providers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -54,5 +55,30 @@ void main() {
     expect(FeedPeriod.any.cutoff(now), isNull);
     expect(FeedPeriod.day.cutoff(now), DateTime.utc(2026, 10, 30, 12));
     expect(FeedPeriod.week.cutoff(now), DateTime.utc(2026, 10, 24, 12));
+  });
+
+  test('the sheet subtitle names the selected categories', () {
+    expect(FeedFilterSheet.subtitle(const FeedFilter()), 'All categories');
+    expect(
+      FeedFilterSheet.subtitle(
+        const FeedFilter(
+          categories: {NewsCategory.crypto, NewsCategory.security},
+          sourceIds: {'a', 'b'},
+        ),
+      ),
+      'Showing sources in Security and Crypto · 2 selected',
+    );
+    expect(
+      FeedFilterSheet.subtitle(
+        const FeedFilter(
+          categories: {
+            NewsCategory.ai,
+            NewsCategory.security,
+            NewsCategory.crypto,
+          },
+        ),
+      ),
+      'Showing sources in AI, Security and Crypto',
+    );
   });
 }
