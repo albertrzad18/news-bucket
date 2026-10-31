@@ -92,6 +92,9 @@ flutter build apk --debug --target-platform android-x64   # fastest build for th
 
 - v0.1.0 released 2026-10-31 (schema 1, still had the Claude category and images). `main` has
   moved on (schema 3); the next release tag will be v0.2.0.
-- A visual redesign is being prepared by the user in Claude Design (clean, minimal, editorial; no
-  emoji, gradients or other "AI look"). When it arrives, implement it through ThemeData/ColorScheme
-  tokens and the existing Material 3 widgets.
+- The visual redesign ("paper on a desk") is on `main`: explicit light/dark `ColorScheme`s plus
+  `NbColors`/`NbText` theme extensions in `app_theme.dart`, bundled variable fonts Literata
+  (headlines) and Public Sans (UI) in `assets/fonts/`. Change font weights with
+  `TextStyle.withWeight()`, not `copyWith(fontWeight:)`, because the fonts are variable. One
+  ink-blue accent marks state only; no images, emoji, gradients or shadows on content. Shared
+  widgets live in `lib/core/widgets/` (`EmptyState`, `CategoryMarker`).
