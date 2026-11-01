@@ -29,9 +29,13 @@ class ArticleTile extends ConsumerWidget {
         article.sourceId;
 
     final metaStyle = meta.copyWith(color: read ? nb.read : s.onSurfaceVariant);
-    final categoryStyle = context.nbText.sectionLabel.copyWith(
-      color: metaStyle.color,
-    );
+    // Bold kicker in the category's colour, faded on read cards.
+    final categoryColor = nb.category(article.category.id);
+    final categoryStyle = context.nbText.sectionLabel
+        .withWeight(FontWeight.w800)
+        .copyWith(
+          color: read ? categoryColor.withValues(alpha: 0.55) : categoryColor,
+        );
     // "▲" comes from a fallback font with a taller line box; a forced strut
     // keeps every part of the meta line on one baseline.
     final metaStrut = StrutStyle.fromTextStyle(
