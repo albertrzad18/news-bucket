@@ -6,7 +6,8 @@ headlines about **AI** (with a focus on Claude / Anthropic), **programming**, **
 
 ## Features
 
-- One feed from 27 sources, newest first, with category chips and a per-source filter
+- One feed from 27 sources, newest first, with swipeable category tabs (All, AI, Programming,
+  Security, Stocks & ETFs, Crypto) and a per-source filter
 - Search in titles and snippets; filter by publication date (24 hours, 3 days, a week)
 - Pull to refresh; refreshes on its own when the data is older than 15 minutes
 - Works offline from a local cache (articles are kept for 30 days, saved ones forever)

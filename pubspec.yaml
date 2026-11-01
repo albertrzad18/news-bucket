@@ -1,7 +1,7 @@
 name: news_bucket
 description: "A personal Android news aggregator for AI, Claude, programming, security, markets and crypto."
 publish_to: 'none'
-version: 0.1.0+1
+version: 0.2.0+2
 
 environment:
   sdk: ^3.13.7

@@ -42,16 +42,17 @@ enum FeedPeriod {
       duration == null ? null : now.toUtc().subtract(duration!);
 }
 
+/// Filters shared by every category tab of the feed. The category itself is
+/// the selected tab, not part of the filter.
 class FeedFilter {
   const FeedFilter({
-    this.categories = const {},
     this.sourceIds = const {},
     this.period = FeedPeriod.any,
     this.query = '',
   });
 
-  /// Empty means "all".
-  final Set<NewsCategory> categories;
+  /// Empty means "all". On a category tab only the selected sources of that
+  /// category count, so a pick in Crypto doesn't empty the AI tab.
   final Set<String> sourceIds;
   final FeedPeriod period;
 
@@ -59,23 +60,18 @@ class FeedFilter {
   final String query;
 
   bool get isActive =>
-      categories.isNotEmpty ||
-      sourceIds.isNotEmpty ||
-      period != FeedPeriod.any ||
-      query.isNotEmpty;
+      sourceIds.isNotEmpty || period != FeedPeriod.any || query.isNotEmpty;
 
-  /// Filters set in the filter sheet, for the badge on its button.
-  int get sheetFilterCount =>
-      sourceIds.length + (period == FeedPeriod.any ? 0 : 1);
+  /// Selected sources among [visible] (the sources of one tab).
+  Set<String> sourcesIn(Iterable<String> visible) =>
+      visible.where(sourceIds.contains).toSet();
 
   FeedFilter copyWith({
-    Set<NewsCategory>? categories,
     Set<String>? sourceIds,
     FeedPeriod? period,
     String? query,
   }) {
     return FeedFilter(
-      categories: categories ?? this.categories,
       sourceIds: sourceIds ?? this.sourceIds,
       period: period ?? this.period,
       query: query ?? this.query,
@@ -100,12 +96,6 @@ class FeedFilterNotifier extends Notifier<FeedFilter> {
     return const FeedFilter();
   }
 
-  void toggleCategory(NewsCategory category) {
-    final next = {...state.categories};
-    if (!next.remove(category)) next.add(category);
-    state = state.copyWith(categories: next);
-  }
-
   void toggleSource(String sourceId) {
     final next = {...state.sourceIds};
     if (!next.remove(sourceId)) next.add(sourceId);
@@ -117,25 +107,41 @@ class FeedFilterNotifier extends Notifier<FeedFilter> {
   void setQuery(String query) => state = state.copyWith(query: query.trim());
 
   /// Resets what the filter sheet controls: sources and period.
-  void clearSheetFilters() =>
-      state = FeedFilter(categories: state.categories, query: state.query);
+  void clearSheetFilters() => state = FeedFilter(query: state.query);
 
   void clear() => state = const FeedFilter();
 }
 
-final feedArticlesProvider = StreamProvider<List<Article>>((ref) {
-  final filter = ref.watch(feedFilterProvider);
-  final disabled = ref.watch(disabledSourcesProvider);
-  return ref
-      .watch(newsRepositoryProvider)
-      .watchArticles(
-        categories: filter.categories,
-        sourceIds: filter.sourceIds,
-        excludedSourceIds: disabled,
-        publishedAfter: filter.period.cutoff(DateTime.now()),
-        query: filter.query,
-      );
+/// Ids of the enabled sources shown on a feed tab; null means All.
+final tabSourceIdsProvider = Provider.family<Set<String>, NewsCategory?>((
+  ref,
+  category,
+) {
+  final sources = ref.watch(enabledSourcesProvider).value ?? const [];
+  return {
+    for (final source in sources)
+      if (category == null || source.category == category) source.id,
+  };
 });
+
+/// Articles of one feed tab; null means All. Newest first.
+final feedArticlesProvider =
+    StreamProvider.family<List<Article>, NewsCategory?>((ref, category) {
+      final filter = ref.watch(feedFilterProvider);
+      final disabled = ref.watch(disabledSourcesProvider);
+      final sourceIds = filter.sourcesIn(
+        ref.watch(tabSourceIdsProvider(category)),
+      );
+      return ref
+          .watch(newsRepositoryProvider)
+          .watchArticles(
+            categories: {?category},
+            sourceIds: sourceIds,
+            excludedSourceIds: disabled,
+            publishedAfter: filter.period.cutoff(DateTime.now()),
+            query: filter.query,
+          );
+    });
 
 final savedArticlesProvider = StreamProvider<List<Article>>((ref) {
   return ref.watch(newsRepositoryProvider).watchArticles(savedOnly: true);

@@ -240,7 +240,9 @@ class NewsRepository {
       score: Value(article.score),
       commentCount: Value(article.commentCount),
       commentsUrl: Value(article.commentsUrl),
-      publishedAt: article.publishedAt,
+      // A feed with a wrong time zone can date items ahead of now; they
+      // would then sit at the top of the newest-first feed for hours.
+      publishedAt: article.publishedAt.isAfter(now) ? now : article.publishedAt,
       fetchedAt: now,
     );
   }

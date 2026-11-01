@@ -102,7 +102,7 @@ void main() {
     expect(find.byType(SegmentedButton<ThemeMode>), findsOneWidget);
   });
 
-  testWidgets('feed lists refreshed articles and filters by category', (
+  testWidgets('feed lists refreshed articles and switches category tabs', (
     tester,
   ) async {
     await pumpApp(
@@ -116,13 +116,21 @@ void main() {
     // The list is lazy, so only the first few cards are built.
     expect(find.text('Claude story'), findsWidgets);
 
-    final crypto = find.widgetWithText(FilterChip, 'Crypto');
+    final crypto = find.widgetWithText(Tab, 'Crypto');
     await tester.ensureVisible(crypto);
     await tester.pumpAndSettle();
     await tester.tap(crypto);
     await settle(tester);
     expect(find.text('Crypto story'), findsWidgets);
     expect(find.text('Claude story'), findsNothing);
+
+    // Swiping right goes back through the tabs to AI.
+    for (var i = 0; i < 4; i++) {
+      await tester.fling(find.byType(TabBarView), const Offset(400, 0), 1000);
+      await settle(tester);
+    }
+    expect(find.text('Claude story'), findsWidgets);
+    expect(find.text('Crypto story'), findsNothing);
   });
 
   testWidgets('saving an article shows it on the Saved tab', (tester) async {

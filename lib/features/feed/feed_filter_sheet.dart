@@ -6,9 +6,12 @@ import '../../core/widgets/category_marker.dart';
 import '../../data/models/news_category.dart';
 import 'feed_providers.dart';
 
-/// Bottom sheet to narrow the feed by publication date and source.
+/// Bottom sheet to narrow the feed by publication date and source. Lists the
+/// sources of [category], the open feed tab, or all of them for null (All).
 class FeedFilterSheet extends ConsumerWidget {
-  const FeedFilterSheet({super.key});
+  const FeedFilterSheet({this.category, super.key});
+
+  final NewsCategory? category;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -23,9 +26,13 @@ class FeedFilterSheet extends ConsumerWidget {
 
     final groups = [
       for (final category in NewsCategory.values)
-        if (filter.categories.isEmpty || filter.categories.contains(category))
+        if (this.category == null || this.category == category)
           (category, sources.where((s) => s.category == category).toList()),
     ].where((group) => group.$2.isNotEmpty);
+    final selected = filter
+        .sourcesIn(ref.watch(tabSourceIdsProvider(category)))
+        .length;
+    final active = selected + (filter.period == FeedPeriod.any ? 0 : 1);
 
     return SafeArea(
       child: Padding(
@@ -42,9 +49,7 @@ class FeedFilterSheet extends ConsumerWidget {
                     child: Text('Filters', style: textTheme.headlineMedium),
                   ),
                   TextButton(
-                    onPressed: filter.sheetFilterCount == 0
-                        ? null
-                        : notifier.clearSheetFilters,
+                    onPressed: active == 0 ? null : notifier.clearSheetFilters,
                     child: const Text('Clear'),
                   ),
                 ],
@@ -74,7 +79,7 @@ class FeedFilterSheet extends ConsumerWidget {
                     _heading(context, 'Sources'),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-                      child: Text(subtitle(filter), style: muted),
+                      child: Text(subtitle(category, selected), style: muted),
                     ),
                     for (final (category, items) in groups) ...[
                       Padding(
@@ -131,21 +136,12 @@ class FeedFilterSheet extends ConsumerWidget {
     child: Text(text, style: Theme.of(context).textTheme.titleMedium),
   );
 
-  /// "Showing sources in Security and Crypto · 2 selected".
+  /// "Sources in Crypto · 2 selected".
   @visibleForTesting
-  static String subtitle(FeedFilter filter) {
-    final labels = [
-      for (final category in NewsCategory.values)
-        if (filter.categories.contains(category)) category.label,
-    ];
-    final scope = switch (labels.length) {
-      0 => 'All categories',
-      1 => 'Showing sources in ${labels.single}',
-      _ =>
-        'Showing sources in ${labels.sublist(0, labels.length - 1).join(', ')}'
-            ' and ${labels.last}',
-    };
-    final selected = filter.sourceIds.length;
+  static String subtitle(NewsCategory? category, int selected) {
+    final scope = category == null
+        ? 'All categories'
+        : 'Sources in ${category.label}';
     return selected == 0 ? scope : '$scope · $selected selected';
   }
 }

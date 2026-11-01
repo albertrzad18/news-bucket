@@ -3,12 +3,15 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../core/widgets/category_marker.dart';
+import '../../core/theme/app_theme.dart';
 import '../../core/widgets/empty_state.dart';
 import '../../data/models/news_category.dart';
 import 'article_tile.dart';
 import 'feed_filter_sheet.dart';
 import 'feed_providers.dart';
+
+/// Feed tabs in order: All (null), then every category.
+const _tabs = <NewsCategory?>[null, ...NewsCategory.values];
 
 class FeedScreen extends ConsumerStatefulWidget {
   const FeedScreen({super.key});
@@ -17,16 +20,27 @@ class FeedScreen extends ConsumerStatefulWidget {
   ConsumerState<FeedScreen> createState() => _FeedScreenState();
 }
 
-class _FeedScreenState extends ConsumerState<FeedScreen> {
+class _FeedScreenState extends ConsumerState<FeedScreen>
+    with SingleTickerProviderStateMixin {
+  late final _tabController = TabController(length: _tabs.length, vsync: this)
+    ..addListener(_onTabChanged);
   final _searchController = TextEditingController();
   Timer? _searchDebounce;
   bool _searching = false;
 
+  NewsCategory? get _category => _tabs[_tabController.index];
+
   @override
   void dispose() {
+    _tabController.dispose();
     _searchDebounce?.cancel();
     _searchController.dispose();
     super.dispose();
+  }
+
+  /// Rebuilds for the tab colour and the filter badge of the new tab.
+  void _onTabChanged() {
+    if (mounted) setState(() {});
   }
 
   FeedFilterNotifier get _filter => ref.read(feedFilterProvider.notifier);
@@ -69,9 +83,9 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final articles = ref.watch(feedArticlesProvider);
     final filter = ref.watch(feedFilterProvider);
     final isRefreshing = ref.watch(refreshProvider).isRefreshing;
+    final category = _category;
 
     // "Clear filters" also resets the search; keep the field in sync.
     ref.listen(feedFilterProvider, (previous, next) {
@@ -80,19 +94,45 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
       }
     });
 
+    final sheetCount =
+        filter.sourcesIn(ref.watch(tabSourceIdsProvider(category))).length +
+        (filter.period == FeedPeriod.any ? 0 : 1);
     final filterButton = IconButton(
       tooltip: 'Filters',
       icon: Badge(
-        isLabelVisible: filter.sheetFilterCount > 0,
-        label: Text('${filter.sheetFilterCount}'),
+        isLabelVisible: sheetCount > 0,
+        label: Text('$sheetCount'),
         child: const Icon(Icons.tune),
       ),
       onPressed: () => showModalBottomSheet<void>(
         context: context,
         isScrollControlled: true,
         useSafeArea: true,
-        builder: (_) => const FeedFilterSheet(),
+        builder: (_) => FeedFilterSheet(category: category),
       ),
+    );
+
+    final s = Theme.of(context).colorScheme;
+    final tabColor = category == null
+        ? s.onSurface
+        : context.nb.category(category.id);
+    final tabBar = TabBar(
+      controller: _tabController,
+      isScrollable: true,
+      tabAlignment: TabAlignment.start,
+      padding: const EdgeInsets.symmetric(horizontal: 4),
+      labelColor: tabColor,
+      unselectedLabelColor: s.onSurfaceVariant,
+      labelStyle: Theme.of(context).textTheme.labelLarge!
+          .withWeight(FontWeight.w700),
+      unselectedLabelStyle: Theme.of(context).textTheme.labelLarge,
+      indicatorColor: tabColor,
+      indicatorSize: TabBarIndicatorSize.label,
+      // The 2dp slot below draws the divider and the refresh progress.
+      dividerHeight: 0,
+      tabs: [
+        for (final tab in _tabs) Tab(text: tab?.label ?? 'All', height: 40),
+      ],
     );
 
     return PopScope(
@@ -124,6 +164,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
                   },
                 ),
                 actions: [filterButton],
+                bottom: tabBar,
               )
             : AppBar(
                 title: const Text('News Bucket'),
@@ -135,24 +176,10 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
                   ),
                   filterButton,
                 ],
+                bottom: tabBar,
               ),
         body: Column(
           children: [
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
-              child: Row(
-                spacing: 8,
-                children: [
-                  for (final category in NewsCategory.values)
-                    _CategoryChip(
-                      category: category,
-                      selected: filter.categories.contains(category),
-                      onSelected: () => _filter.toggleCategory(category),
-                    ),
-                ],
-              ),
-            ),
             // Fixed slot so the list doesn't jump when a refresh starts.
             SizedBox(
               height: 2,
@@ -164,27 +191,12 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
                     ),
             ),
             Expanded(
-              child: RefreshIndicator(
-                onRefresh: _refresh,
-                child: articles.when(
-                  data: (items) => items.isEmpty
-                      ? _emptyFeed(filter, isRefreshing)
-                      : ListView.builder(
-                          padding: const EdgeInsets.only(top: 8, bottom: 16),
-                          keyboardDismissBehavior:
-                              ScrollViewKeyboardDismissBehavior.onDrag,
-                          itemCount: items.length,
-                          itemBuilder: (_, i) => ArticleTile(
-                            key: ValueKey(items[i].id),
-                            article: items[i],
-                          ),
-                        ),
-                  loading: () => const EmptyState(title: 'Loading news…'),
-                  error: (error, _) => EmptyState(
-                    title: "Couldn't load articles.",
-                    body: '$error',
-                  ),
-                ),
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  for (final tab in _tabs)
+                    _FeedTab(category: tab, onRefresh: _refresh),
+                ],
               ),
             ),
           ],
@@ -192,13 +204,68 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
       ),
     );
   }
+}
 
-  Widget _emptyFeed(FeedFilter filter, bool isRefreshing) {
-    if (isRefreshing) return const EmptyState(title: 'Loading news…');
-    if (!filter.isActive) {
-      return const EmptyState(
-        title: 'No articles yet.',
-        body: 'Pull down to refresh.',
+/// The article list of one category tab, or of all categories for null.
+class _FeedTab extends ConsumerStatefulWidget {
+  const _FeedTab({required this.category, required this.onRefresh});
+
+  final NewsCategory? category;
+  final Future<void> Function() onRefresh;
+
+  @override
+  ConsumerState<_FeedTab> createState() => _FeedTabState();
+}
+
+class _FeedTabState extends ConsumerState<_FeedTab>
+    with AutomaticKeepAliveClientMixin {
+  // Keeps the scroll position when swiping to another tab and back.
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    final articles = ref.watch(feedArticlesProvider(widget.category));
+    return RefreshIndicator(
+      onRefresh: widget.onRefresh,
+      child: articles.when(
+        data: (items) => items.isEmpty
+            ? _empty()
+            : ListView.builder(
+                padding: const EdgeInsets.only(top: 8, bottom: 16),
+                keyboardDismissBehavior:
+                    ScrollViewKeyboardDismissBehavior.onDrag,
+                itemCount: items.length,
+                itemBuilder: (_, i) =>
+                    ArticleTile(key: ValueKey(items[i].id), article: items[i]),
+              ),
+        loading: () => const EmptyState(title: 'Loading news…'),
+        error: (error, _) =>
+            EmptyState(title: "Couldn't load articles.", body: '$error'),
+      ),
+    );
+  }
+
+  Widget _empty() {
+    final filter = ref.watch(feedFilterProvider);
+    final sources = ref.watch(tabSourceIdsProvider(widget.category));
+    final filtered =
+        filter.query.isNotEmpty ||
+        filter.period != FeedPeriod.any ||
+        filter.sourcesIn(sources).isNotEmpty;
+
+    if (ref.watch(refreshProvider).isRefreshing) {
+      return const EmptyState(title: 'Loading news…');
+    }
+    if (!filtered) {
+      return EmptyState(
+        title: sources.isEmpty && widget.category != null
+            ? 'All ${widget.category!.label} sources are off.'
+            : 'No articles yet.',
+        body: sources.isEmpty && widget.category != null
+            ? 'Turn some on in Settings.'
+            : 'Pull down to refresh.',
       );
     }
     return EmptyState(
@@ -206,37 +273,9 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
           ? 'No articles match "${filter.query}".'
           : 'Nothing matches the current filters.',
       action: TextButton(
-        onPressed: _filter.clear,
+        onPressed: ref.read(feedFilterProvider.notifier).clear,
         child: const Text('Clear filters'),
       ),
-    );
-  }
-}
-
-class _CategoryChip extends StatelessWidget {
-  const _CategoryChip({
-    required this.category,
-    required this.selected,
-    required this.onSelected,
-  });
-
-  final NewsCategory category;
-  final bool selected;
-  final VoidCallback onSelected;
-
-  @override
-  Widget build(BuildContext context) {
-    return FilterChip(
-      // Without an avatar the checkmark takes its place when selected;
-      // with one, the chip would paint the check on top of the marker.
-      avatar: selected ? null : Center(child: CategoryMarker(category)),
-      // The default avatar box is icon-sized, too wide for the 6dp marker.
-      avatarBoxConstraints: selected
-          ? null
-          : const BoxConstraints.tightFor(width: 10, height: 10),
-      label: Text(category.label),
-      selected: selected,
-      onSelected: (_) => onSelected(),
     );
   }
 }

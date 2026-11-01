@@ -31,22 +31,21 @@ void main() {
     expect(container.read(feedFilterProvider).isActive, isFalse);
   });
 
-  test('the sheet clears sources and period but keeps category and search', () {
+  test('the sheet clears sources and period but keeps the search', () {
     final container = ProviderContainer();
     addTearDown(container.dispose);
     final filter = container.read(feedFilterProvider.notifier)
-      ..toggleCategory(NewsCategory.ai)
       ..toggleSource('a')
       ..setPeriod(FeedPeriod.week)
       ..setQuery('  claude ');
 
-    expect(container.read(feedFilterProvider).sheetFilterCount, 2);
+    expect(container.read(feedFilterProvider).isActive, isTrue);
     expect(container.read(feedFilterProvider).query, 'claude');
 
     filter.clearSheetFilters();
     final state = container.read(feedFilterProvider);
-    expect(state.sheetFilterCount, 0);
-    expect(state.categories, {NewsCategory.ai});
+    expect(state.sourceIds, isEmpty);
+    expect(state.period, FeedPeriod.any);
     expect(state.query, 'claude');
   });
 
@@ -57,28 +56,17 @@ void main() {
     expect(FeedPeriod.week.cutoff(now), DateTime.utc(2026, 10, 24, 12));
   });
 
-  test('the sheet subtitle names the selected categories', () {
-    expect(FeedFilterSheet.subtitle(const FeedFilter()), 'All categories');
+  test('only selected sources of a tab narrow that tab', () {
+    const filter = FeedFilter(sourceIds: {'coindesk', 'hn'});
+    expect(filter.sourcesIn({'coindesk', 'decrypt'}), {'coindesk'});
+    expect(filter.sourcesIn({'anthropic'}), isEmpty);
+  });
+
+  test('the sheet subtitle names the open category', () {
+    expect(FeedFilterSheet.subtitle(null, 0), 'All categories');
     expect(
-      FeedFilterSheet.subtitle(
-        const FeedFilter(
-          categories: {NewsCategory.crypto, NewsCategory.security},
-          sourceIds: {'a', 'b'},
-        ),
-      ),
-      'Showing sources in Security and Crypto · 2 selected',
-    );
-    expect(
-      FeedFilterSheet.subtitle(
-        const FeedFilter(
-          categories: {
-            NewsCategory.ai,
-            NewsCategory.security,
-            NewsCategory.crypto,
-          },
-        ),
-      ),
-      'Showing sources in AI, Security and Crypto',
+      FeedFilterSheet.subtitle(NewsCategory.crypto, 2),
+      'Sources in Crypto · 2 selected',
     );
   });
 }

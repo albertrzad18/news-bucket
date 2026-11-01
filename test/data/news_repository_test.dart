@@ -83,6 +83,27 @@ void main() {
     expect(all.map((a) => a.title), ['Title new', 'Title old']);
   });
 
+  test('a date in the future is stored as the fetch time', () async {
+    fetcher.responses['a'] = [
+      Article(
+        id: 'https://example.com/future',
+        sourceId: 'a',
+        category: NewsCategory.ai,
+        title: 'From the future',
+        url: 'https://example.com/future',
+        publishedAt: DateTime.utc(2100),
+      ),
+    ];
+    final before = DateTime.now().toUtc();
+    await repo.refresh([src('a')]);
+    final stored = (await repo.watchArticles().first).single.publishedAt;
+    expect(stored.isBefore(DateTime.utc(2100)), isTrue);
+    expect(
+      stored.isBefore(before.subtract(const Duration(seconds: 1))),
+      isFalse,
+    );
+  });
+
   test(
     'a failing source does not block the others and records its error',
     () async {

@@ -45,10 +45,14 @@ flutter build apk --debug --target-platform android-x64   # fastest build for th
   settings in shared_preferences, utils. `lib/data/` models, own RSS/Atom/RDF parser on `xml`,
   JSON parsers (HN Algolia, DEV), drift DB (`articles`, `source_states`; 30-day retention, saved
   kept forever), `news_repository.dart`. `lib/features/` feed, saved, settings, notifications.
-- Feed filtering lives in `FeedFilter` (`feed_providers.dart`): category chips, sources and
-  publication period (`FeedPeriod`) in `feed_filter_sheet.dart`, and a search field in the app bar
-  (300 ms debounce; every word must match title or snippet via SQL `LIKE`, ASCII-only case folding).
-  Search and the period filter apply to the Feed tab only.
+- The Feed has swipeable category tabs (`TabBar`/`TabBarView`): All plus one per category, the
+  selected tab tinted in its category colour. `feedArticlesProvider` is a family keyed by
+  `NewsCategory?` (null = All). `FeedFilter` (`feed_providers.dart`) holds what all tabs share:
+  sources and publication period (`FeedPeriod`) from `feed_filter_sheet.dart` (which lists the open
+  tab's sources; a selected source only narrows its own category's tab), and a search field in the
+  app bar (300 ms debounce; every word must match title or snippet via SQL `LIKE`, ASCII-only case
+  folding). Search and the period filter apply to the Feed tab only. Dates in the future are stored
+  as the fetch time so they can't pin an article to the top.
 - DB schema version 3. Users update by installing a new APK over the old one, so every schema
   change needs a step in `AppDatabase.migration.onUpgrade` and a check in
   `test/data/migration_test.dart` (it starts from the v1 schema shipped in v0.1.0). v2 dropped
