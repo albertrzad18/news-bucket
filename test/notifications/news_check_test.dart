@@ -103,6 +103,17 @@ void main() {
     expect(result.map((s) => s.id), ['a']);
   });
 
+  test('notificationSources skips hidden categories', () {
+    final catalog = [src('a'), src('b')];
+    final result = notificationSources(
+      catalog,
+      notifyIds: {'a', 'b'},
+      disabledIds: const {},
+      hiddenCategories: {catalog.first.category},
+    );
+    expect(result, isEmpty);
+  });
+
   group('buildNotificationContent', () {
     final names = {'a': 'Claude Code releases', 'b': 'HN'};
 

@@ -1,7 +1,7 @@
-// Fetches every source in assets/sources.json with the real HTTP client and
-// parser, and prints how many articles each one yields.
+// Fetches every source in assets/sources.json (or the file given) with the
+// real HTTP client and parser, and prints how many articles each one yields.
 //
-//   dart run tool/check_sources.dart
+//   dart run tool/check_sources.dart [path/to/sources.json]
 import 'dart:convert';
 import 'dart:io';
 
@@ -9,8 +9,9 @@ import 'package:news_bucket/core/network/http_client.dart';
 import 'package:news_bucket/data/models/source_config.dart';
 import 'package:news_bucket/data/sources/source_fetcher.dart';
 
-Future<void> main() async {
-  final json = jsonDecode(File('assets/sources.json').readAsStringSync());
+Future<void> main(List<String> args) async {
+  final path = args.isEmpty ? 'assets/sources.json' : args.first;
+  final json = jsonDecode(File(path).readAsStringSync());
   final sources = (json['sources'] as List)
       .cast<Map<String, dynamic>>()
       .map(SourceConfig.fromJson)

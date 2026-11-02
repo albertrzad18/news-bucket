@@ -1,16 +1,23 @@
 import '../../data/models/article.dart';
+import '../../data/models/news_category.dart';
 import '../../data/models/source_config.dart';
 import '../../data/repositories/news_repository.dart';
 
 /// Sources the background check should fetch: chosen for notifications and
-/// not switched off.
+/// not switched off or in a hidden category.
 List<SourceConfig> notificationSources(
   List<SourceConfig> catalog, {
   required Set<String> notifyIds,
   required Set<String> disabledIds,
+  Set<NewsCategory> hiddenCategories = const {},
 }) {
   return catalog
-      .where((s) => notifyIds.contains(s.id) && !disabledIds.contains(s.id))
+      .where(
+        (s) =>
+            notifyIds.contains(s.id) &&
+            !disabledIds.contains(s.id) &&
+            !hiddenCategories.contains(s.category),
+      )
       .toList();
 }
 

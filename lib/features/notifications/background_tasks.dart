@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workmanager/workmanager.dart';
 
 import '../../core/network/http_client.dart';
+import '../../core/settings/category_settings.dart';
 import '../../core/settings/notification_settings.dart';
 import '../../core/settings/source_settings.dart';
 import '../../data/db/app_database.dart';
@@ -52,6 +53,7 @@ Future<List<Article>> runNewsCheck({
     notifyIds: NotificationPrefs(prefs).sourceIds(catalog),
     disabledIds: (prefs.getStringList(DisabledSourcesNotifier.key) ?? const [])
         .toSet(),
+    hiddenCategories: HiddenCategoriesNotifier.read(prefs),
   );
   final fresh = await checkForNews(repo, sources);
   if (fresh.isNotEmpty) {

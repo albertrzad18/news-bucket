@@ -5,7 +5,10 @@ enum NewsCategory {
   programming('programming', 'Programming'),
   security('security', 'Security'),
   markets('markets', 'Stocks & ETFs'),
-  crypto('crypto', 'Crypto');
+  crypto('crypto', 'Crypto'),
+  gaming('gaming', 'Gaming'),
+  conspiracy('conspiracy', 'Conspiracies'),
+  crime('crime', 'True Crime');
 
   const NewsCategory(this.id, this.label);
 

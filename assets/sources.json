@@ -32,6 +32,30 @@
 
     { "id": "coindesk", "name": "CoinDesk", "category": "crypto", "type": "feed", "url": "https://www.coindesk.com/arc/outboundfeeds/rss/", "limit": 15 },
     { "id": "cointelegraph", "name": "Cointelegraph", "category": "crypto", "type": "feed", "url": "https://cointelegraph.com/rss", "limit": 15 },
-    { "id": "decrypt", "name": "Decrypt", "category": "crypto", "type": "feed", "url": "https://decrypt.co/feed", "limit": 15 }
+    { "id": "decrypt", "name": "Decrypt", "category": "crypto", "type": "feed", "url": "https://decrypt.co/feed", "limit": 15 },
+
+    { "id": "ign", "name": "IGN", "category": "gaming", "type": "feed", "url": "https://feeds.feedburner.com/ign/all", "limit": 15 },
+    { "id": "gamespot", "name": "GameSpot", "category": "gaming", "type": "feed", "url": "https://www.gamespot.com/feeds/mashup/", "limit": 15 },
+    { "id": "polygon", "name": "Polygon", "category": "gaming", "type": "feed", "url": "https://www.polygon.com/rss/index.xml", "limit": 15 },
+    { "id": "pcgamer", "name": "PC Gamer", "category": "gaming", "type": "feed", "url": "https://www.pcgamer.com/rss/", "limit": 15 },
+    { "id": "rockpapershotgun", "name": "Rock Paper Shotgun", "category": "gaming", "type": "feed", "url": "https://www.rockpapershotgun.com/feed", "limit": 15 },
+    { "id": "gryonline", "name": "GRYOnline.pl (PL)", "category": "gaming", "type": "feed", "url": "https://www.gry-online.pl/rss/gry.xml", "limit": 15 },
+    { "id": "eurogamer-pl", "name": "Eurogamer.pl (PL)", "category": "gaming", "type": "feed", "url": "https://www.eurogamer.pl/feed", "limit": 15 },
+
+    { "id": "black-vault", "name": "The Black Vault", "category": "conspiracy", "type": "feed", "url": "https://www.theblackvault.com/documentarchive/feed/", "limit": 15 },
+    { "id": "the-debrief", "name": "The Debrief", "category": "conspiracy", "type": "feed", "url": "https://thedebrief.org/feed/", "limit": 15 },
+    { "id": "liberation-times", "name": "Liberation Times", "category": "conspiracy", "type": "feed", "url": "https://www.liberationtimes.com/home?format=rss", "limit": 15 },
+    { "id": "anomalien", "name": "Anomalien", "category": "conspiracy", "type": "feed", "url": "https://anomalien.com/feed/", "limit": 15 },
+    { "id": "ancient-origins", "name": "Ancient Origins", "category": "conspiracy", "type": "feed", "url": "https://www.ancient-origins.net/rss.xml", "limit": 15 },
+    { "id": "infra", "name": "Portal Infra (PL)", "category": "conspiracy", "type": "feed", "url": "https://infra.org.pl/feed/", "limit": 15 },
+    { "id": "metabunk", "name": "Metabunk", "category": "conspiracy", "type": "feed", "url": "https://www.metabunk.org/forums/-/index.rss", "limit": 15 },
+    { "id": "skeptoid", "name": "Skeptoid", "category": "conspiracy", "type": "feed", "url": "https://skeptoid.com/podcast.xml", "limit": 10 },
+
+    { "id": "oxygen", "name": "Oxygen True Crime", "category": "crime", "type": "feed", "url": "https://www.oxygen.com/rss.xml", "limit": 15 },
+    { "id": "court-tv", "name": "Court TV", "category": "crime", "type": "feed", "url": "https://www.courttv.com/feed/", "limit": 15 },
+    { "id": "law-and-crime", "name": "Law&Crime", "category": "crime", "type": "feed", "url": "https://lawandcrime.com/feed/", "limit": 15 },
+    { "id": "fbi-press", "name": "FBI press releases", "category": "crime", "type": "feed", "url": "https://www.fbi.gov/feeds/national-press-releases/rss.xml", "limit": 15 },
+    { "id": "crime-junkie", "name": "Crime Junkie (podcast)", "category": "crime", "type": "feed", "url": "https://feeds.simplecast.com/qm_9xx0g", "limit": 10 },
+    { "id": "kryminatorium", "name": "Kryminatorium (PL)", "category": "crime", "type": "feed", "url": "https://www.kryminatorium.pl/feed/", "limit": 15 }
   ]
 }

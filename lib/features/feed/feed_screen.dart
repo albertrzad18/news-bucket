@@ -1,17 +1,16 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/settings/category_settings.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/empty_state.dart';
 import '../../data/models/news_category.dart';
 import 'article_tile.dart';
 import 'feed_filter_sheet.dart';
 import 'feed_providers.dart';
-
-/// Feed tabs in order: All (null), then every category.
-const _tabs = <NewsCategory?>[null, ...NewsCategory.values];
 
 class FeedScreen extends ConsumerStatefulWidget {
   const FeedScreen({super.key});
@@ -21,14 +20,36 @@ class FeedScreen extends ConsumerStatefulWidget {
 }
 
 class _FeedScreenState extends ConsumerState<FeedScreen>
-    with SingleTickerProviderStateMixin {
-  late final _tabController = TabController(length: _tabs.length, vsync: this)
-    ..addListener(_onTabChanged);
+    with TickerProviderStateMixin {
+  /// Feed tabs in order: All (null), then every visible category.
+  late List<NewsCategory?> _tabs = [
+    null,
+    ...ref.read(visibleCategoriesProvider),
+  ];
+  late TabController _tabController = _newTabController(0);
   final _searchController = TextEditingController();
   Timer? _searchDebounce;
   bool _searching = false;
 
   NewsCategory? get _category => _tabs[_tabController.index];
+
+  TabController _newTabController(int index) =>
+      TabController(length: _tabs.length, initialIndex: index, vsync: this)
+        ..addListener(_onTabChanged);
+
+  /// Rebuilds the tabs after categories were hidden or shown in Settings,
+  /// staying on the open category if it is still there.
+  void _syncTabs(List<NewsCategory?> tabs) {
+    if (listEquals(tabs, _tabs)) return;
+    final open = _category;
+    final old = _tabController..removeListener(_onTabChanged);
+    _tabs = tabs;
+    _tabController = _newTabController(
+      tabs.contains(open) ? tabs.indexOf(open) : 0,
+    );
+    // The old TabBar still holds it until this frame is built.
+    WidgetsBinding.instance.addPostFrameCallback((_) => old.dispose());
+  }
 
   @override
   void dispose() {
@@ -83,6 +104,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
 
   @override
   Widget build(BuildContext context) {
+    _syncTabs([null, ...ref.watch(visibleCategoriesProvider)]);
     final filter = ref.watch(feedFilterProvider);
     final isRefreshing = ref.watch(refreshProvider).isRefreshing;
     final category = _category;
@@ -195,7 +217,11 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
                 controller: _tabController,
                 children: [
                   for (final tab in _tabs)
-                    _FeedTab(category: tab, onRefresh: _refresh),
+                    _FeedTab(
+                      key: ValueKey(tab),
+                      category: tab,
+                      onRefresh: _refresh,
+                    ),
                 ],
               ),
             ),
@@ -208,7 +234,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen>
 
 /// The article list of one category tab, or of all categories for null.
 class _FeedTab extends ConsumerStatefulWidget {
-  const _FeedTab({required this.category, required this.onRefresh});
+  const _FeedTab({required this.category, required this.onRefresh, super.key});
 
   final NewsCategory? category;
   final Future<void> Function() onRefresh;

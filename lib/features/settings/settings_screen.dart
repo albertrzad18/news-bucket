@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/settings/category_settings.dart';
 import '../../core/settings/notification_settings.dart';
 import '../../core/settings/preferences.dart';
 import '../../core/settings/source_settings.dart';
@@ -24,6 +25,7 @@ class SettingsScreen extends ConsumerWidget {
     final themeMode = ref.watch(themeModeProvider);
     final catalog = ref.watch(sourceCatalogProvider).value ?? const [];
     final disabled = ref.watch(disabledSourcesProvider);
+    final visibleCategories = ref.watch(visibleCategoriesProvider);
     final notifications = ref.watch(notificationSettingsProvider);
     final states = {
       for (final s in ref.watch(sourceStatesProvider).value ?? const [])
@@ -79,11 +81,31 @@ class SettingsScreen extends ConsumerWidget {
                 ),
               ),
           ],
+          const _SectionLabel('Categories', EdgeInsets.fromLTRB(16, 28, 16, 4)),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+            child: Text(
+              'Hidden categories leave the feed and their sources '
+              "aren't refreshed.",
+              style: Theme.of(context).textTheme.bodySmall!
+                  .copyWith(color: scheme.onSurfaceVariant),
+            ),
+          ),
+          const Divider(),
+          for (final category in NewsCategory.values)
+            _CategoryRow(
+              category: category,
+              visible: visibleCategories.contains(category),
+              // The feed needs at least one category.
+              locked:
+                  visibleCategories.length == 1 &&
+                  visibleCategories.single == category,
+            ),
           _SectionLabel(
-            'Sources · ${catalog.length}',
+            'Sources · ${catalog.where((s) => visibleCategories.contains(s.category)).length}',
             const EdgeInsets.fromLTRB(16, 28, 16, 0),
           ),
-          for (final category in NewsCategory.values) ...[
+          for (final category in visibleCategories) ...[
             _CategoryHeader(
               category: category,
               sources: [
@@ -185,6 +207,65 @@ class _SectionLabel extends StatelessWidget {
     return Padding(
       padding: padding,
       child: Text(text.toUpperCase(), style: context.nbText.sectionLabel),
+    );
+  }
+}
+
+/// Category with a switch that shows or hides it on the feed.
+class _CategoryRow extends ConsumerWidget {
+  const _CategoryRow({
+    required this.category,
+    required this.visible,
+    required this.locked,
+  });
+
+  final NewsCategory category;
+  final bool visible;
+
+  /// The last visible category can't be hidden.
+  final bool locked;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+    final onChanged = locked
+        ? null
+        : (bool value) => ref
+              .read(hiddenCategoriesProvider.notifier)
+              .setVisible(category, visible: value);
+
+    return InkWell(
+      onTap: onChanged == null ? null : () => onChanged(!visible),
+      child: Padding(
+        padding: const EdgeInsets.only(left: 16),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            border: Border(bottom: BorderSide(color: scheme.outlineVariant)),
+          ),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(minHeight: 56),
+            child: Padding(
+              padding: const EdgeInsets.only(right: 16),
+              child: Row(
+                children: [
+                  CategoryMarker(category),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      category.label,
+                      style: theme.textTheme.bodyLarge!.copyWith(
+                        color: visible ? scheme.onSurface : context.nb.read,
+                      ),
+                    ),
+                  ),
+                  Switch(value: visible, onChanged: onChanged),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

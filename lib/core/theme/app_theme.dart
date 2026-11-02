@@ -357,6 +357,9 @@ class NbColors extends ThemeExtension<NbColors> {
       'security': Color(0xFFA34747),
       'markets': Color(0xFF8A6A28),
       'crypto': Color(0xFF75598C),
+      'gaming': Color(0xFFA34D78),
+      'conspiracy': Color(0xFFA8552A),
+      'crime': Color(0xFF56657A),
     },
   );
 
@@ -374,6 +377,9 @@ class NbColors extends ThemeExtension<NbColors> {
       'security': Color(0xFFDA8A85),
       'markets': Color(0xFFCFAE6A),
       'crypto': Color(0xFFB49AC8),
+      'gaming': Color(0xFFE09ABD),
+      'conspiracy': Color(0xFFE8A27A),
+      'crime': Color(0xFFA3B2C6),
     },
   );
 

@@ -16,6 +16,7 @@ import 'package:news_bucket/data/providers.dart';
 import 'package:news_bucket/data/sources/source_catalog.dart';
 import 'package:news_bucket/data/sources/source_fetcher.dart';
 import 'package:news_bucket/features/feed/feed_providers.dart';
+import 'package:news_bucket/features/settings/settings_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class FakeFetcher extends SourceFetcher {
@@ -189,6 +190,7 @@ void main() {
     expect(find.text('Claude story'), findsWidgets);
     await tester.tap(find.text('Settings').last);
     await tester.pumpAndSettle();
+    await scrollSettingsTo(tester, find.text('Claude Code releases'));
     final row = find
         .ancestor(
           of: find.text('Claude Code releases'),
@@ -199,6 +201,38 @@ void main() {
       find.descendant(of: row, matching: find.byType(Switch)),
     );
     expect(toggle.value, isFalse);
+  });
+
+  testWidgets('a hidden category loses its tab and leaves All', (tester) async {
+    await pumpApp(
+      tester,
+      articles: {
+        NewsCategory.ai: ['Claude story'],
+        NewsCategory.crime: ['Crime story'],
+      },
+    );
+    expect(find.widgetWithText(Tab, 'True Crime'), findsOneWidget);
+
+    await tester.tap(find.text('Settings').last);
+    await tester.pumpAndSettle();
+    await scrollSettingsTo(tester, find.text('True Crime'));
+    final row = find
+        .ancestor(of: find.text('True Crime'), matching: find.byType(Row))
+        .last;
+    await tester.tap(find.descendant(of: row, matching: find.byType(Switch)));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Feed').last);
+    await settle(tester);
+    expect(find.widgetWithText(Tab, 'True Crime'), findsNothing);
+    expect(find.text('Claude story'), findsWidgets);
+    expect(find.text('Crime story'), findsNothing);
+    expect(
+      (await SharedPreferences.getInstance()).getStringList(
+        'hidden_categories',
+      ),
+      ['crime'],
+    );
   });
 
   testWidgets('switching to dark mode applies and persists the theme', (
@@ -242,6 +276,19 @@ void main() {
 Future<void> settle(WidgetTester tester) async {
   await tester.runAsync(
     () => Future<void>.delayed(const Duration(milliseconds: 200)),
+  );
+  await tester.pumpAndSettle();
+}
+
+/// Scrolls the Settings list until [finder] is built and on screen.
+Future<void> scrollSettingsTo(WidgetTester tester, Finder finder) async {
+  await tester.scrollUntilVisible(
+    finder,
+    200,
+    scrollable: find.descendant(
+      of: find.byType(SettingsScreen),
+      matching: find.byType(Scrollable),
+    ),
   );
   await tester.pumpAndSettle();
 }

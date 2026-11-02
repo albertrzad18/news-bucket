@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/settings/category_settings.dart';
 import '../../core/settings/source_settings.dart';
 import '../../data/db/app_database.dart';
 import '../../data/models/article.dart';
@@ -8,11 +9,18 @@ import '../../data/models/source_config.dart';
 import '../../data/providers.dart';
 import '../../data/repositories/news_repository.dart';
 
-/// Sources from the catalog that the user has not switched off.
+/// Sources from the catalog that the user has not switched off, outside
+/// hidden categories.
 final enabledSourcesProvider = FutureProvider<List<SourceConfig>>((ref) async {
   final catalog = await ref.watch(sourceCatalogProvider.future);
   final disabled = ref.watch(disabledSourcesProvider);
-  return catalog.where((source) => !disabled.contains(source.id)).toList();
+  final hidden = ref.watch(hiddenCategoriesProvider);
+  return catalog
+      .where(
+        (source) =>
+            !disabled.contains(source.id) && !hidden.contains(source.category),
+      )
+      .toList();
 });
 
 /// Source id to display name.
@@ -135,7 +143,10 @@ final feedArticlesProvider =
       return ref
           .watch(newsRepositoryProvider)
           .watchArticles(
-            categories: {?category},
+            // All shows every visible category.
+            categories: category == null
+                ? ref.watch(visibleCategoriesProvider).toSet()
+                : {category},
             sourceIds: sourceIds,
             excludedSourceIds: disabled,
             publishedAfter: filter.period.cutoff(DateTime.now()),

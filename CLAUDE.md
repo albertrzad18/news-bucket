@@ -1,7 +1,8 @@
 # News Bucket: notes for Claude
 
-Personal Android news aggregator in Flutter. Five categories: AI (the Claude/Anthropic sources
-belong here on purpose, the user merged the two), Programming, Security, Stocks & ETFs, Crypto.
+Personal Android news aggregator in Flutter. Eight categories: AI (the Claude/Anthropic sources
+belong here on purpose, the user merged the two), Programming, Security, Stocks & ETFs, Crypto,
+Gaming, Conspiracies, True Crime. Each can be hidden in Settings.
 Used by the owner and two friends; APKs are installed by hand from GitHub Releases, no Play
 Store, no backend. Public repo: https://github.com/albertrzad18/news-bucket
 
@@ -53,6 +54,12 @@ flutter build apk --debug --target-platform android-x64   # fastest build for th
   app bar (300 ms debounce; every word must match title or snippet via SQL `LIKE`, ASCII-only case
   folding). Search and the period filter apply to the Feed tab only. Dates in the future are stored
   as the fetch time so they can't pin an article to the top.
+- Hidden categories (`category_settings.dart`, prefs key `hidden_categories`) lose their tab and
+  their place in All, and their sources are neither refreshed nor checked for notifications
+  (`enabledSourcesProvider`, `runNewsCheck`). At least one category stays visible. The Feed
+  rebuilds its `TabController` when the visible set changes. A new category needs an enum value
+  in `news_category.dart` and light/dark colours in `NbColors`; no DB migration (it's a text
+  column).
 - DB schema version 3. Users update by installing a new APK over the old one, so every schema
   change needs a step in `AppDatabase.migration.onUpgrade` and a check in
   `test/data/migration_test.dart` (it starts from the v1 schema shipped in v0.1.0). v2 dropped
