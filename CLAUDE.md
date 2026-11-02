@@ -106,7 +106,9 @@ flutter build apk --debug --target-platform android-x64   # fastest build for th
 
 - v0.1.0 released 2026-10-31 (schema 1, still had the Claude category and images).
 - v0.2.0 released 2026-11-01 (schema 3): redesign, category tabs, search and date filter, no
-  images, no notification sources by default. The next release tag will be v0.3.0.
+  images, no notification sources by default.
+- v0.3.0 released 2026-11-02 (schema 3): hideable categories, new categories Gaming, Books,
+  Conspiracies, True Crime (66 sources). The next release tag will be v0.4.0.
 - The visual redesign ("paper on a desk") is on `main`: explicit light/dark `ColorScheme`s plus
   `NbColors`/`NbText` theme extensions in `app_theme.dart`, bundled variable fonts Literata
   (headlines) and Public Sans (UI) in `assets/fonts/`. Change font weights with
