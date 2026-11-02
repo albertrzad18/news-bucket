@@ -2,13 +2,12 @@
 
 A small, personal Android news aggregator built with Flutter. It collects the most interesting
 headlines about **AI** (with a focus on Claude / Anthropic), **programming**, **cybersecurity**,
-**stocks & ETFs**, **crypto**, **gaming**, **books** (fantasy, crime fiction, popular science),
-**conspiracies & mysteries** and **true crime** into one feed.
+**stocks & ETFs**, **crypto**, **gaming**, **books** (fantasy, crime fiction, popular science) and
+**true crime** into one feed.
 
 ## Features
 
-- One feed from 66 sources, newest first, with swipeable category tabs (All, AI, Programming,
-  Security, Stocks & ETFs, Crypto, Gaming, Books, Conspiracies, True Crime) and a per-source
+- One feed from over 50 sources, newest first, with swipeable category tabs and a per-source
   filter
 - Search in titles and snippets; filter by publication date (24 hours, 3 days, a week)
 - Pull to refresh; refreshes on its own when the data is older than 15 minutes
@@ -39,7 +38,6 @@ that file (`"notify": true` makes it a default notification source).
 | Crypto | CoinDesk, Cointelegraph, Decrypt |
 | Gaming | IGN, GameSpot, Polygon, PC Gamer, Rock Paper Shotgun, GRYOnline.pl, Eurogamer.pl |
 | Books | Reactor (Tor.com), Fantasy-Faction, Grimdark Magazine, Fantasy Book Critic, CrimeReads, Five Books, The Guardian (fantasy, crime fiction, science books), Book Riot, Lubimyczytać, Booklips, Kawerna |
-| Conspiracies | The Black Vault, The Debrief, Liberation Times, Anomalien, Ancient Origins, Portal Infra, Metabunk, Skeptoid, AE911Truth, JFK Facts, MuckRock, Unredacted (National Security Archive), SpyTalk |
 | True Crime | Oxygen True Crime, Court TV, Law&Crime, FBI press releases, Crime Junkie (podcast), Kryminatorium |
 
 All content belongs to its respective publishers.

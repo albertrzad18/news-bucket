@@ -79,7 +79,9 @@ flutter build apk --debug --target-platform android-x64   # fastest build for th
   app_flutter/news_bucket.sqlite'` while the app is stopped. `am force-stop` cancels the job until
   the app starts again. In Git Bash set `MSYS_NO_PATHCONV=1` for adb commands with device paths.
   applicationId: `com.albertrzad.newsbucket`.
-- Sources live in `assets/sources.json`; keep the README source table in sync.
+- Sources live in `assets/sources.json`; keep the README source table in sync, except the
+  Conspiracies category: the user doesn't want it mentioned in the README at all (no row, no
+  name in the intro or tab list, and the source count is "over 50" so it doesn't add up to it).
 
 ## Rules
 
