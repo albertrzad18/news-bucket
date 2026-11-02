@@ -1,8 +1,9 @@
 # News Bucket: notes for Claude
 
-Personal Android news aggregator in Flutter. Eight categories: AI (the Claude/Anthropic sources
+Personal Android news aggregator in Flutter. Nine categories: AI (the Claude/Anthropic sources
 belong here on purpose, the user merged the two), Programming, Security, Stocks & ETFs, Crypto,
-Gaming, Conspiracies, True Crime. Each can be hidden in Settings.
+Gaming, Books (mainly fantasy, crime fiction, popular science), Conspiracies (UFOs, mysteries and
+government ones like 9/11 or JFK, plus debunkers), True Crime. Each can be hidden in Settings.
 Used by the owner and two friends; APKs are installed by hand from GitHub Releases, no Play
 Store, no backend. Public repo: https://github.com/albertrzad18/news-bucket
 

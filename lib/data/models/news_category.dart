@@ -7,6 +7,7 @@ enum NewsCategory {
   markets('markets', 'Stocks & ETFs'),
   crypto('crypto', 'Crypto'),
   gaming('gaming', 'Gaming'),
+  books('books', 'Books'),
   conspiracy('conspiracy', 'Conspiracies'),
   crime('crime', 'True Crime');
 
