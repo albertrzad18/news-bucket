@@ -7,7 +7,7 @@ headlines about **AI** (with a focus on Claude / Anthropic), **programming**, **
 
 ## Features
 
-- One feed from over 50 sources, newest first, with swipeable category tabs and a per-source
+- One feed from over 70 sources, newest first, with swipeable category tabs and a per-source
   filter
 - Search in titles and snippets; filter by publication date (24 hours, 3 days, a week)
 - Pull to refresh; refreshes on its own when the data is older than 15 minutes
@@ -31,14 +31,14 @@ that file (`"notify": true` makes it a default notification source).
 
 | Category | Sources |
 |---|---|
-| AI | Claude Code releases, Anthropic News & Engineering (community feeds), Hacker News (Claude), OpenAI, Google AI, Hugging Face, Simon Willison, arXiv, DEV #ai |
-| Programming | Hacker News, Lobsters, DEV, GitHub Blog |
-| Security | BleepingComputer, The Hacker News, Krebs, Schneier, Sekurak, Niebezpiecznik |
-| Stocks & ETFs | CNBC, MarketWatch, ETF Trends, Seeking Alpha (ETFs) |
-| Crypto | CoinDesk, Cointelegraph, Decrypt |
-| Gaming | IGN, GameSpot, Polygon, PC Gamer, Rock Paper Shotgun, GRYOnline.pl, Eurogamer.pl |
-| Books | Reactor (Tor.com), Fantasy-Faction, Grimdark Magazine, Fantasy Book Critic, CrimeReads, Five Books, The Guardian (fantasy, crime fiction, science books), Book Riot, Lubimyczytać, Booklips, Kawerna |
-| True Crime | Oxygen True Crime, Court TV, Law&Crime, FBI press releases, Crime Junkie (podcast), Kryminatorium |
+| AI | Claude Code releases, Anthropic News & Engineering (community feeds), Hacker News (Claude), OpenAI, Google AI, Hugging Face, Simon Willison, arXiv, DEV #ai, ITwiz (AI), ITReseller (AI), Opanuj.AI (podcast) |
+| Programming | Hacker News, Lobsters, DEV, GitHub Blog, JustGeek.IT, Programista, devstyle |
+| Security | BleepingComputer, The Hacker News, Krebs, Schneier, Sekurak, Niebezpiecznik, Zaufana Trzecia Strona, CERT Polska, CyberDefence24 |
+| Stocks & ETFs | CNBC, MarketWatch, ETF Trends, Seeking Alpha (ETFs), Bankier.pl (Giełda), Comparic, Inwestomat |
+| Crypto | CoinDesk, Cointelegraph, Decrypt, Bitcoin.pl, CrypS., BitHub.pl |
+| Gaming | IGN, GameSpot, Polygon, PC Gamer, Rock Paper Shotgun, GRYOnline.pl, Eurogamer.pl, CD-Action |
+| Books | Reactor (Tor.com), Fantasy-Faction, Grimdark Magazine, Fantasy Book Critic, CrimeReads, Five Books, The Guardian (fantasy, crime fiction, science books), Book Riot, Lubimyczytać, Booklips, Kawerna, Ostatnia Tawerna (literature), Świat Czytników |
+| True Crime | Oxygen True Crime, Court TV, Law&Crime, FBI press releases, Crime Junkie (podcast), Kryminatorium, Polish podcasts: Kryminalne Historie, Casefile Polska, Piąte: Nie zabijaj, Olga Herring True Crime |
 
 All content belongs to its respective publishers.
 

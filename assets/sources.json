@@ -12,11 +12,17 @@
     { "id": "simon-willison", "name": "Simon Willison", "category": "ai", "type": "feed", "url": "https://simonwillison.net/atom/everything/", "limit": 15 },
     { "id": "arxiv-ai", "name": "arXiv cs.AI / cs.CL", "category": "ai", "type": "feed", "url": "https://export.arxiv.org/api/query?search_query=cat:cs.AI+OR+cat:cs.CL&sortBy=submittedDate&sortOrder=descending&max_results=10", "limit": 10 },
     { "id": "devto-ai", "name": "DEV: #ai (top week)", "category": "ai", "type": "devto", "url": "https://dev.to/api/articles?tag=ai&top=7&per_page=15", "limit": 15 },
+    { "id": "itwiz-ai", "name": "ITwiz: AI (PL)", "category": "ai", "type": "feed", "url": "https://itwiz.pl/tag/ai/feed/", "limit": 10 },
+    { "id": "itreseller-ai", "name": "ITReseller: AI (PL)", "category": "ai", "type": "feed", "url": "https://itreseller.pl/tag/sztuczna-inteligencja/feed/", "limit": 10 },
+    { "id": "opanuj-ai", "name": "Opanuj.AI (podcast, PL)", "category": "ai", "type": "feed", "url": "https://anchor.fm/s/e2cb03d0/podcast/rss", "limit": 10 },
 
     { "id": "hn-front", "name": "Hacker News front page", "category": "programming", "type": "hn_algolia", "url": "https://hn.algolia.com/api/v1/search?tags=front_page&numericFilters=points%3E100", "limit": 20 },
     { "id": "lobsters", "name": "Lobsters", "category": "programming", "type": "feed", "url": "https://lobste.rs/rss", "limit": 15 },
     { "id": "devto-top", "name": "DEV (top week)", "category": "programming", "type": "devto", "url": "https://dev.to/api/articles?top=7&per_page=15", "limit": 15 },
     { "id": "github-blog", "name": "GitHub Blog", "category": "programming", "type": "feed", "url": "https://github.blog/feed/", "limit": 15 },
+    { "id": "justgeekit", "name": "JustGeek.IT (PL)", "category": "programming", "type": "feed", "url": "https://justgeek.it/feed/", "limit": 15 },
+    { "id": "programista-mag", "name": "Programista (PL)", "category": "programming", "type": "feed", "url": "https://programistamag.pl/feed/", "limit": 10 },
+    { "id": "devstyle", "name": "devstyle (PL)", "category": "programming", "type": "feed", "url": "https://devstyle.pl/feed/", "limit": 10 },
 
     { "id": "bleepingcomputer", "name": "BleepingComputer", "category": "security", "type": "feed", "url": "https://www.bleepingcomputer.com/feed/", "limit": 15 },
     { "id": "thehackernews", "name": "The Hacker News", "category": "security", "type": "feed", "url": "https://feeds.feedburner.com/TheHackersNews", "limit": 15 },
@@ -24,15 +30,24 @@
     { "id": "schneier", "name": "Schneier on Security", "category": "security", "type": "feed", "url": "https://www.schneier.com/feed/atom/", "limit": 10 },
     { "id": "sekurak", "name": "Sekurak (PL)", "category": "security", "type": "feed", "url": "https://sekurak.pl/feed/", "limit": 15 },
     { "id": "niebezpiecznik", "name": "Niebezpiecznik (PL)", "category": "security", "type": "feed", "url": "https://niebezpiecznik.pl/feed/", "limit": 15 },
+    { "id": "zaufana-trzecia-strona", "name": "Zaufana Trzecia Strona (PL)", "category": "security", "type": "feed", "url": "https://www.zaufanatrzeciastrona.pl/feed/", "limit": 10 },
+    { "id": "cert-pl", "name": "CERT Polska (PL)", "category": "security", "type": "feed", "url": "https://cert.pl/rss.xml", "limit": 10 },
+    { "id": "cyberdefence24", "name": "CyberDefence24 (PL)", "category": "security", "type": "feed", "url": "https://cyberdefence24.pl/rss", "limit": 15 },
 
     { "id": "cnbc", "name": "CNBC Top News", "category": "markets", "type": "feed", "url": "https://www.cnbc.com/id/100003114/device/rss/rss.html", "limit": 15 },
     { "id": "marketwatch", "name": "MarketWatch Top Stories", "category": "markets", "type": "feed", "url": "https://feeds.content.dowjones.io/public/rss/mw_topstories", "limit": 15 },
     { "id": "etftrends", "name": "ETF Trends", "category": "markets", "type": "feed", "url": "https://www.etftrends.com/feed/", "limit": 15 },
     { "id": "seekingalpha-etf", "name": "Seeking Alpha: ETFs", "category": "markets", "type": "feed", "url": "https://seekingalpha.com/tag/etf-portfolio-strategy.xml", "limit": 15 },
+    { "id": "bankier-gielda", "name": "Bankier.pl: Giełda (PL)", "category": "markets", "type": "feed", "url": "https://www.bankier.pl/rss/gielda.xml", "limit": 15 },
+    { "id": "comparic", "name": "Comparic (PL)", "category": "markets", "type": "feed", "url": "https://comparic.pl/feed/", "limit": 15 },
+    { "id": "inwestomat", "name": "Inwestomat (PL)", "category": "markets", "type": "feed", "url": "https://inwestomat.eu/feed/", "limit": 10 },
 
     { "id": "coindesk", "name": "CoinDesk", "category": "crypto", "type": "feed", "url": "https://www.coindesk.com/arc/outboundfeeds/rss/", "limit": 15 },
     { "id": "cointelegraph", "name": "Cointelegraph", "category": "crypto", "type": "feed", "url": "https://cointelegraph.com/rss", "limit": 15 },
     { "id": "decrypt", "name": "Decrypt", "category": "crypto", "type": "feed", "url": "https://decrypt.co/feed", "limit": 15 },
+    { "id": "bitcoin-pl", "name": "Bitcoin.pl (PL)", "category": "crypto", "type": "feed", "url": "https://bitcoin.pl/feed/", "limit": 15 },
+    { "id": "cryps", "name": "CrypS. (PL)", "category": "crypto", "type": "feed", "url": "https://cryps.pl/feed/", "limit": 10 },
+    { "id": "bithub", "name": "BitHub.pl (PL)", "category": "crypto", "type": "feed", "url": "https://www.bithub.pl/feed/", "limit": 10 },
 
     { "id": "ign", "name": "IGN", "category": "gaming", "type": "feed", "url": "https://feeds.feedburner.com/ign/all", "limit": 15 },
     { "id": "gamespot", "name": "GameSpot", "category": "gaming", "type": "feed", "url": "https://www.gamespot.com/feeds/mashup/", "limit": 15 },
@@ -41,6 +56,7 @@
     { "id": "rockpapershotgun", "name": "Rock Paper Shotgun", "category": "gaming", "type": "feed", "url": "https://www.rockpapershotgun.com/feed", "limit": 15 },
     { "id": "gryonline", "name": "GRYOnline.pl (PL)", "category": "gaming", "type": "feed", "url": "https://www.gry-online.pl/rss/gry.xml", "limit": 15 },
     { "id": "eurogamer-pl", "name": "Eurogamer.pl (PL)", "category": "gaming", "type": "feed", "url": "https://www.eurogamer.pl/feed", "limit": 15 },
+    { "id": "cdaction", "name": "CD-Action (PL)", "category": "gaming", "type": "feed", "url": "https://cdaction.pl/feed", "limit": 15 },
 
     { "id": "reactor", "name": "Reactor (formerly Tor.com)", "category": "books", "type": "feed", "url": "https://reactormag.com/feed/", "limit": 15 },
     { "id": "fantasy-faction", "name": "Fantasy-Faction", "category": "books", "type": "feed", "url": "https://fantasy-faction.com/feed", "limit": 15 },
@@ -55,6 +71,8 @@
     { "id": "lubimyczytac", "name": "Lubimyczytać (PL)", "category": "books", "type": "feed", "url": "https://lubimyczytac.pl/rss", "limit": 15 },
     { "id": "booklips", "name": "Booklips (PL)", "category": "books", "type": "feed", "url": "https://booklips.pl/feed/", "limit": 15 },
     { "id": "kawerna", "name": "Kawerna (PL)", "category": "books", "type": "feed", "url": "https://kawerna.pl/feed/", "limit": 10 },
+    { "id": "ostatnia-tawerna", "name": "Ostatnia Tawerna: Literatura (PL)", "category": "books", "type": "feed", "url": "https://ostatniatawerna.pl/kategoria/literatura/feed/", "limit": 10 },
+    { "id": "swiat-czytnikow", "name": "Świat Czytników (PL)", "category": "books", "type": "feed", "url": "https://swiatczytnikow.pl/feed/", "limit": 10 },
 
     { "id": "black-vault", "name": "The Black Vault", "category": "conspiracy", "type": "feed", "url": "https://www.theblackvault.com/documentarchive/feed/", "limit": 15 },
     { "id": "the-debrief", "name": "The Debrief", "category": "conspiracy", "type": "feed", "url": "https://thedebrief.org/feed/", "limit": 15 },
@@ -62,6 +80,7 @@
     { "id": "anomalien", "name": "Anomalien", "category": "conspiracy", "type": "feed", "url": "https://anomalien.com/feed/", "limit": 15 },
     { "id": "ancient-origins", "name": "Ancient Origins", "category": "conspiracy", "type": "feed", "url": "https://www.ancient-origins.net/rss.xml", "limit": 15 },
     { "id": "infra", "name": "Portal Infra (PL)", "category": "conspiracy", "type": "feed", "url": "https://infra.org.pl/feed/", "limit": 15 },
+    { "id": "nautilus", "name": "Fundacja Nautilus (PL)", "category": "conspiracy", "type": "feed", "url": "https://www.nautilus.org.pl/rss", "limit": 10 },
     { "id": "metabunk", "name": "Metabunk", "category": "conspiracy", "type": "feed", "url": "https://www.metabunk.org/forums/-/index.rss", "limit": 15 },
     { "id": "skeptoid", "name": "Skeptoid", "category": "conspiracy", "type": "feed", "url": "https://skeptoid.com/podcast.xml", "limit": 10 },
     { "id": "ae911truth", "name": "AE911Truth", "category": "conspiracy", "type": "feed", "url": "https://www.ae911truth.org/feed", "limit": 10 },
@@ -75,6 +94,10 @@
     { "id": "law-and-crime", "name": "Law&Crime", "category": "crime", "type": "feed", "url": "https://lawandcrime.com/feed/", "limit": 15 },
     { "id": "fbi-press", "name": "FBI press releases", "category": "crime", "type": "feed", "url": "https://www.fbi.gov/feeds/national-press-releases/rss.xml", "limit": 15 },
     { "id": "crime-junkie", "name": "Crime Junkie (podcast)", "category": "crime", "type": "feed", "url": "https://feeds.simplecast.com/qm_9xx0g", "limit": 10 },
-    { "id": "kryminatorium", "name": "Kryminatorium (PL)", "category": "crime", "type": "feed", "url": "https://www.kryminatorium.pl/feed/", "limit": 15 }
+    { "id": "kryminatorium", "name": "Kryminatorium (PL)", "category": "crime", "type": "feed", "url": "https://www.kryminatorium.pl/feed/", "limit": 15 },
+    { "id": "kryminalne-historie", "name": "Kryminalne Historie (podcast, PL)", "category": "crime", "type": "feed", "url": "https://anchor.fm/s/6e6e1568/podcast/rss", "limit": 10 },
+    { "id": "casefile-polska", "name": "Casefile Polska (podcast, PL)", "category": "crime", "type": "feed", "url": "https://feeds.acast.com/public/shows/67a39b0533bffa4af0dcdf94", "limit": 10 },
+    { "id": "piate-nie-zabijaj", "name": "Piąte: Nie zabijaj (podcast, PL)", "category": "crime", "type": "feed", "url": "https://anchor.fm/s/e1b27dc0/podcast/rss", "limit": 10 },
+    { "id": "olga-herring", "name": "Olga Herring True Crime (podcast, PL)", "category": "crime", "type": "feed", "url": "https://anchor.fm/s/606807e4/podcast/rss", "limit": 10 }
   ]
 }
