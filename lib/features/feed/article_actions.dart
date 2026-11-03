@@ -22,10 +22,9 @@ Future<void> openArticle(WidgetRef ref, Article article) async {
   await openUrl(article.url);
 }
 
+/// Shares the link alone, without the headline.
 Future<void> shareArticle(Article article) {
-  return SharePlus.instance.share(
-    ShareParams(text: '${article.title}\n${article.url}'),
-  );
+  return SharePlus.instance.share(ShareParams(text: article.url));
 }
 
 Future<void> toggleRead(WidgetRef ref, Article article) {
